@@ -1,0 +1,17 @@
+.brand-name {
+  font-size: 12px;
+}
+
+.brand-name > span {
+  color: #8195ae;
+  font:600 8px Manrope, sans-serif;
+  letter-spacing: .25px;
+  white-space: nowrap;
+}
+
+@media (max-width: 650px) {
+  .brand-name > span {
+    font-size: 7px;
+    letter-spacing: .1px;
+  }
+}

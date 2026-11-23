@@ -1,0 +1,59 @@
+.roi-business-case {
+  grid-column: 1 / -1;
+}
+
+.roi-business-case-grid {
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.3fr) minmax(0, 1fr);
+  gap: 12px;
+}
+
+.roi-business-case-grid > section {
+  min-width: 0;
+  padding: 13px 15px;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  background: var(--panel2);
+}
+
+.roi-business-case-grid h4 {
+  margin: 0 0 8px;
+  color: var(--text);
+  font: 700 12px/1.35 Manrope, sans-serif;
+}
+
+.roi-business-case-grid ul {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding-left: 17px;
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.55;
+}
+
+.roi-formula {
+  margin: 0;
+  color: var(--accent-strong, var(--cyan)) !important;
+  font: 700 14px/1.5 Manrope, sans-serif !important;
+  overflow-wrap: anywhere;
+}
+
+.roi-business-case-note {
+  margin: 13px 0 0 !important;
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 11px !important;
+  line-height: 1.55 !important;
+}
+
+.roi-business-case-note b {
+  color: var(--text);
+}
+
+@media (max-width: 650px) {
+  .roi-business-case-grid {
+    grid-template-columns: 1fr;
+  }
+}

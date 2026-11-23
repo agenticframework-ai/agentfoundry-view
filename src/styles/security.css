@@ -1,0 +1,92 @@
+.control-explorer {
+  min-width: 0;
+}
+
+.control-explorer .card-title-row {
+  align-items: flex-start;
+  flex-direction: column;
+}
+
+.control-explorer .toggle-group {
+  flex-wrap: wrap;
+}
+
+.security-matrix-scroll {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  max-height: 490px;
+  overflow: auto;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.security-matrix {
+  width: 100%;
+  min-width: 900px;
+  border-collapse: separate;
+  border-spacing: 0;
+  text-align: left;
+}
+
+.security-matrix th,
+.security-matrix td {
+  border-bottom: 1px solid var(--line);
+  padding: 10px 11px;
+  vertical-align: top;
+  font-size: 10px;
+  line-height: 1.55;
+}
+
+.security-matrix thead th {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--panel2);
+  color: var(--text);
+  font: 650 9px Manrope, sans-serif;
+  letter-spacing: .3px;
+}
+
+.security-matrix tbody th {
+  width: 18%;
+  color: var(--text);
+  font: 650 10px/1.5 Manrope, sans-serif;
+  text-align: left;
+}
+
+.security-matrix tbody td {
+  color: var(--muted);
+}
+
+.security-matrix tbody tr {
+  cursor: pointer;
+  transition: background-color .15s ease;
+}
+
+.security-matrix tbody tr:hover,
+.security-matrix tbody tr.active {
+  background: var(--accent-soft, rgba(84, 226, 223, .08));
+}
+
+.security-matrix tbody tr:last-child > * {
+  border-bottom: 0;
+}
+
+.security-matrix tbody tr:focus-visible {
+  outline: 2px solid var(--accent-strong, var(--cyan));
+  outline-offset: -2px;
+}
+
+.security-matrix-hint {
+  color: var(--muted);
+  font-size: 9px !important;
+  line-height: 1.5 !important;
+  margin: 8px 0 0 !important;
+}
+
+@media (max-width: 650px) {
+  .security-matrix-scroll {
+    max-height: 65vh;
+  }
+}
