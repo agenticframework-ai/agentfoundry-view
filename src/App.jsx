@@ -273,8 +273,7 @@ export default function App() {
   return <main className="presentation-shell" data-theme={theme} data-appearance={theme==='dark'?'dark':'light'}>
     <div className="ambient ambient-a"/><div className="ambient ambient-b"/>
     <header className="topbar">
-      <button className="brand" onClick={()=>navigate(0)} aria-label="Go to title"><span className="brand-mark">A<span>✦</span></span><span className="brand-name">NEXOVARA<span>An Intelligent Enterprise AI Framework</span></span></button>
-      <div className="topbar-center"><span className="live-dot"/><span>ENTERPRISE AI BRIEFING</span><i/> <span>30–45 MIN</span></div>
+      <button className="brand" onClick={()=>navigate(0)} aria-label="Go to title"><span className="brand-mark">A<span>✦</span></span><span className="brand-name">Agent Foundry<span>An Intelligent Enterprise AI Framework</span></span></button>
       <div className="topbar-actions"><span className="key-hint"><Command size={12}/> ← →</span><button className="icon-button" onClick={()=>setTheme(next=>next==='dark'?'light':next==='light'?'sage':next==='sage'?'forest':'dark')} aria-label={`Switch to ${nextTheme} theme`} title={`Switch to ${nextTheme} theme`}>{themeIcon}</button><button className="icon-button" onClick={()=>{setMenuOpen(false);setSearchOpen(true)}} aria-label="Search all sections" title="Search all sections (Ctrl/⌘ K)"><Search size={17}/></button><button className="icon-button" onClick={()=>setMenuOpen(true)} aria-label="Open contents"><Menu size={18}/></button><button className="icon-button" onClick={toggleFullscreen} aria-label="Toggle fullscreen">{isFullscreen?<Minimize size={17}/>:<Maximize size={17}/>}</button></div>
     </header>
     <div className="progress-track"><motion.div className="progress-value" animate={{width:`${((active+1)/slides.length)*100}%`}} transition={{duration:.35}}/></div>

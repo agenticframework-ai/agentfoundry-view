@@ -1,5 +1,5 @@
 export const slides = [
-  { eyebrow: 'ENTERPRISE TRANSFORMATION', title: 'Enterprise Agentic AI', subtitle: 'A practical strategy to move from isolated pilots to trusted, measurable, intelligent workflows.', icon: 'Sparkles', tag: 'ENTERPRISE AI BRIEFING' },
+  { eyebrow: 'ENTERPRISE TRANSFORMATION', title: 'Enterprise Agentic AI', subtitle: 'A practical strategy to move from isolated pilots to trusted, measurable, intelligent workflows.', icon: 'Sparkles', tag: 'STRATEGY FRAMEWORK' },
   { eyebrow: '01 / DISCOVER', title: 'Start with the business, not the bot', subtitle: 'Find high-friction work where better decisions, faster execution and trusted data can change outcomes.', icon: 'Compass', tag: 'DISCOVERY' },
   { eyebrow: '02 / DECIDE', title: 'Should this process use an agent?', subtitle: 'Choose the least complex pattern that safely delivers the outcome. Autonomy is a design choice—not the goal.', icon: 'GitBranch', tag: 'DECISION FRAMEWORK' },
   { eyebrow: '03 / ARCHITECT', title: 'A reference architecture built for trust', subtitle: 'Connect experience, orchestration, models and enterprise systems—with security and observability throughout.', icon: 'Network', tag: 'REFERENCE ARCHITECTURE' },
