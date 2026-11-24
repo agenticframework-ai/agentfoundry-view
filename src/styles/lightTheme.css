@@ -1,0 +1,932 @@
+.presentation-shell[data-appearance="light"] {
+  color-scheme: light;
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --panel2: #f3f4f6;
+  --line: #d1d5db;
+  --line2: #cbd5e1;
+  --text: #111827;
+  --muted: #64748b;
+  --text-strong: #334155;
+  --text-secondary: #475569;
+  --surface-soft: #f9fafb;
+  --neutral-fill: #e5e7eb;
+  --line-soft: #e2e8f0;
+  --accent: #a3e635;
+  --accent-strong: #65a30d;
+  --accent-deep: #4d7c0f;
+  --accent-ink: #365314;
+  --accent-hover: #bef264;
+  --accent-soft: #ecfccb;
+  --accent-pale: #d9f99d;
+  --accent-tint: #f7fee7;
+  --success-bg: #f0fdf4;
+  --success-border: #86efac;
+  --cyan: #a3e635;
+  --blue: #65a30d;
+  --violet: #64748b;
+  color: #111827;
+  background: #ffffff;
+}
+
+.presentation-shell[data-appearance="light"] .ambient {
+  display: none;
+}
+
+.presentation-shell[data-appearance="light"] :is(h1, h2, h3, h4, h5, p, span, b, strong, small, label, button, th, td) {
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .topbar,
+.presentation-shell[data-appearance="light"] .bottom-bar {
+  border-color: var(--neutral-fill);
+  background: #ffffff;
+}
+
+.presentation-shell[data-appearance="light"] .topbar-center,
+.presentation-shell[data-appearance="light"] .key-hint,
+.presentation-shell[data-appearance="light"] .slide-meta,
+.presentation-shell[data-appearance="light"] .slide-eyebrow,
+.presentation-shell[data-appearance="light"] .bottom-left,
+.presentation-shell[data-appearance="light"] .contents-button,
+.presentation-shell[data-appearance="light"] .brand-subtitle,
+.presentation-shell[data-appearance="light"] .slide-subtitle,
+.presentation-shell[data-appearance="light"] .muted,
+.presentation-shell[data-appearance="light"] .small,
+.presentation-shell[data-appearance="light"] .tiny {
+  color: var(--muted) !important;
+}
+
+.presentation-shell[data-theme="light"] .brand-title {
+  color: #806000 !important;
+}
+
+.presentation-shell[data-appearance="light"] .topbar-center i,
+.presentation-shell[data-appearance="light"] .bottom-left i {
+  background: var(--line2);
+}
+
+.presentation-shell[data-appearance="light"] .live-dot {
+  background: var(--accent-strong);
+  box-shadow: none;
+}
+
+.presentation-shell[data-appearance="light"] .brand-mark {
+  border-color: var(--accent-strong);
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+}
+
+.presentation-shell[data-appearance="light"] .brand-mark > span {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .icon-button,
+.presentation-shell[data-appearance="light"] .bottom-center > button,
+.presentation-shell[data-appearance="light"] .presentation-playback-buttons > button {
+  border-color: var(--line);
+  background: #ffffff;
+  color: var(--text-strong);
+}
+
+.presentation-shell[data-appearance="light"] .icon-button:hover,
+.presentation-shell[data-appearance="light"] .bottom-center > button:hover,
+.presentation-shell[data-appearance="light"] .presentation-playback-buttons > button:hover:not(:disabled) {
+  border-color: var(--accent-strong);
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+}
+
+.presentation-shell[data-appearance="light"] .progress-track,
+.presentation-shell[data-appearance="light"] .mini-progress button {
+  background: var(--neutral-fill);
+}
+
+.presentation-shell[data-appearance="light"] .progress-value {
+  background: var(--accent);
+  box-shadow: none;
+}
+
+.presentation-shell[data-appearance="light"] .section-tag,
+.presentation-shell[data-appearance="light"] .section-tag > span,
+.presentation-shell[data-appearance="light"] .bottom-left svg,
+.presentation-shell[data-appearance="light"] .contents-button span {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .visual-orbit .orbit {
+  border-color: rgba(101, 163, 13, .32);
+  filter: drop-shadow(0 0 7px rgba(101, 163, 13, .12));
+}
+
+.presentation-shell[data-appearance="light"] .orbit-core {
+  border-color: var(--accent-strong);
+  background: linear-gradient(145deg, var(--text), var(--text));
+}
+
+.presentation-shell[data-appearance="light"] .orbit-core > span {
+  color: var(--neutral-fill);
+}
+
+.presentation-shell[data-appearance="light"] .visual-orbit .orb-dot {
+  background: var(--accent-strong);
+  box-shadow: 0 0 12px rgba(101, 163, 13, .5);
+}
+
+.presentation-shell[data-appearance="light"] .visual-orbit .d2 {
+  background: var(--accent-strong);
+}
+
+.presentation-shell[data-appearance="light"] .step-tabs button {
+  border-color: var(--line);
+  background: var(--surface-soft);
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .step-tabs button span {
+  color: var(--muted);
+}
+
+.presentation-shell[data-appearance="light"] .step-tabs button.selected {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+}
+
+.presentation-shell[data-appearance="light"] .step-tabs button.selected span {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .slide-number-watermark {
+  color: rgba(17, 24, 39, .06);
+}
+
+.presentation-shell[data-appearance="light"] .mini-progress button.active {
+  background: var(--accent-strong);
+}
+
+.presentation-shell[data-appearance="light"] .card,
+.presentation-shell[data-appearance="light"] .rag-playbook,
+.presentation-shell[data-appearance="light"] .brief-preview,
+.presentation-shell[data-appearance="light"] .stage-insight,
+.presentation-shell[data-appearance="light"] .retrieval-card,
+.presentation-shell[data-appearance="light"] .lifecycle-focus,
+.presentation-shell[data-appearance="light"] .framework-table,
+.presentation-shell[data-appearance="light"] .cloud-map,
+.presentation-shell[data-appearance="light"] .control-explorer,
+.presentation-shell[data-appearance="light"] .governance-card,
+.presentation-shell[data-appearance="light"] .chart-card,
+.presentation-shell[data-appearance="light"] .usecase-detail,
+.presentation-shell[data-appearance="light"] .phase-detail,
+.presentation-shell[data-appearance="light"] .raci-card {
+  border-color: var(--line-soft);
+  background: #ffffff;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, .06);
+}
+
+.presentation-shell[data-appearance="light"] .card h3,
+.presentation-shell[data-appearance="light"] .framework-top h3,
+.presentation-shell[data-appearance="light"] .delivery-left h3,
+.presentation-shell[data-appearance="light"] .operating-caption h3 {
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .card p,
+.presentation-shell[data-appearance="light"] .framework-top p,
+.presentation-shell[data-appearance="light"] .delivery-left > p,
+.presentation-shell[data-appearance="light"] .operating-caption p {
+  color: var(--muted);
+}
+
+.presentation-shell[data-appearance="light"] .micro-label,
+.presentation-shell[data-appearance="light"] .card-title-row > svg,
+.presentation-shell[data-appearance="light"] .section-heading .micro-label {
+  color: var(--muted);
+}
+
+.presentation-shell[data-appearance="light"] .pill {
+  border-color: var(--accent-pale);
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .pill.violet {
+  border-color: var(--line-soft);
+  background: var(--panel2);
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .metric > span,
+.presentation-shell[data-appearance="light"] .metric small,
+.presentation-shell[data-appearance="light"] .counter,
+.presentation-shell[data-appearance="light"] .candidate-score {
+  color: var(--muted);
+}
+
+.presentation-shell[data-appearance="light"] .metric strong {
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .metric small,
+.presentation-shell[data-appearance="light"] .lens-score,
+.presentation-shell[data-appearance="light"] .candidate-card.positive .micro-label {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .candidate-card.positive {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+.presentation-shell[data-appearance="light"] .candidate-card.warning {
+  border-color: #fed7aa;
+}
+
+.presentation-shell[data-appearance="light"] .candidate-card.conditional {
+  border-color: var(--line2);
+}
+
+.presentation-shell[data-appearance="light"] .candidate-card.warning .micro-label {
+  color: #9a3412;
+}
+
+.presentation-shell[data-appearance="light"] .text-field span,
+.presentation-shell[data-appearance="light"] .decision-question > b,
+.presentation-shell[data-appearance="light"] .range-field > span,
+.presentation-shell[data-appearance="light"] .range-field b,
+.presentation-shell[data-appearance="light"] .quote {
+  color: var(--text-strong) !important;
+}
+
+.presentation-shell[data-appearance="light"] .text-field i,
+.presentation-shell[data-appearance="light"] .lens-dot,
+.presentation-shell[data-appearance="light"] .decision-question > span,
+.presentation-shell[data-appearance="light"] .decision-choice.selected,
+.presentation-shell[data-appearance="light"] .decision-choice.selected > small {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .text-field input,
+.presentation-shell[data-appearance="light"] .summary-input input,
+.presentation-shell[data-appearance="light"] .searchbox,
+.presentation-shell[data-appearance="light"] .searchbox input,
+.presentation-shell[data-appearance="light"] .global-search-box,
+.presentation-shell[data-appearance="light"] .global-search-box input,
+.presentation-shell[data-appearance="light"] .querybox input {
+  border-color: var(--line2);
+  background: #ffffff;
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] input::placeholder {
+  color: var(--muted);
+}
+
+.presentation-shell[data-appearance="light"] .analyze-button,
+.presentation-shell[data-appearance="light"] .primary-button,
+.presentation-shell[data-appearance="light"] .querybox button {
+  border-color: var(--accent-strong);
+  background: var(--accent);
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .analyze-button:hover,
+.presentation-shell[data-appearance="light"] .primary-button:hover,
+.presentation-shell[data-appearance="light"] .querybox button:hover {
+  border-color: var(--accent-strong);
+  background: var(--accent-hover);
+  box-shadow: 0 4px 12px rgba(101, 163, 13, .16);
+}
+
+.presentation-shell[data-appearance="light"] .decision-choice,
+.presentation-shell[data-appearance="light"] .layer-row,
+.presentation-shell[data-appearance="light"] .framework-row,
+.presentation-shell[data-appearance="light"] .pipeline-node,
+.presentation-shell[data-appearance="light"] .toggle-group,
+.presentation-shell[data-appearance="light"] .service-node,
+.presentation-shell[data-appearance="light"] .control-table button,
+.presentation-shell[data-appearance="light"] .delivery-node,
+.presentation-shell[data-appearance="light"] .metric-grid > button,
+.presentation-shell[data-appearance="light"] .roi-kpis > .metric,
+.presentation-shell[data-appearance="light"] .usecase-list button,
+.presentation-shell[data-appearance="light"] .workflow-step,
+.presentation-shell[data-appearance="light"] .stage-choice,
+.presentation-shell[data-appearance="light"] .rag-playbook-tabs > button,
+.presentation-shell[data-appearance="light"] .search-suggestions > button {
+  border-color: var(--line);
+  background: var(--surface-soft);
+  color: var(--text-strong);
+}
+
+.presentation-shell[data-appearance="light"] .decision-choice:hover,
+.presentation-shell[data-appearance="light"] .framework-row:hover,
+.presentation-shell[data-appearance="light"] .framework-row.active,
+.presentation-shell[data-appearance="light"] .layer-row:hover,
+.presentation-shell[data-appearance="light"] .service-node:hover,
+.presentation-shell[data-appearance="light"] .metric-grid > button:hover,
+.presentation-shell[data-appearance="light"] .usecase-list button:hover,
+.presentation-shell[data-appearance="light"] .search-suggestions > button:hover {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.presentation-shell[data-appearance="light"] .decision-choice.selected,
+.presentation-shell[data-appearance="light"] .layer-row.active,
+.presentation-shell[data-appearance="light"] .pipeline-node.active,
+.presentation-shell[data-appearance="light"] .service-node.active,
+.presentation-shell[data-appearance="light"] .control-table button.active,
+.presentation-shell[data-appearance="light"] .delivery-node.active,
+.presentation-shell[data-appearance="light"] .metric-grid > button.metric-selected,
+.presentation-shell[data-appearance="light"] .usecase-list button.active,
+.presentation-shell[data-appearance="light"] .rag-playbook-tabs > button.active,
+.presentation-shell[data-appearance="light"] .toggle-group button.active,
+.presentation-shell[data-appearance="light"] .step-tabs button.selected {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  box-shadow: none;
+}
+
+.presentation-shell[data-appearance="light"] .decision-choice > small,
+.presentation-shell[data-appearance="light"] .layer-row > small,
+.presentation-shell[data-appearance="light"] .framework-row > span,
+.presentation-shell[data-appearance="light"] .pipeline-label > span,
+.presentation-shell[data-appearance="light"] .service-node span,
+.presentation-shell[data-appearance="light"] .control-table button,
+.presentation-shell[data-appearance="light"] .vendor-note,
+.presentation-shell[data-appearance="light"] .delivery-node,
+.presentation-shell[data-appearance="light"] .cost-bars > div,
+.presentation-shell[data-appearance="light"] .cost-optimizations > span,
+.presentation-shell[data-appearance="light"] .workflow-step small {
+  color: var(--muted);
+}
+
+.presentation-shell[data-appearance="light"] .score-result,
+.presentation-shell[data-appearance="light"] .lens-detail,
+.presentation-shell[data-appearance="light"] .rag-playbook-intro,
+.presentation-shell[data-appearance="light"] .rag-playbook-table-wrap,
+.presentation-shell[data-appearance="light"] .retrieved,
+.presentation-shell[data-appearance="light"] .cloud-callout,
+.presentation-shell[data-appearance="light"] .control-detail,
+.presentation-shell[data-appearance="light"] .roi-hero,
+.presentation-shell[data-appearance="light"] .executive-form,
+.presentation-shell[data-appearance="light"] .phase-facts > div {
+  border-color: var(--line-soft);
+  background: var(--surface-soft);
+}
+
+.presentation-shell[data-appearance="light"] .score-result h4,
+.presentation-shell[data-appearance="light"] .score-result small,
+.presentation-shell[data-appearance="light"] .lens-detail > b,
+.presentation-shell[data-appearance="light"] .lens-detail p,
+.presentation-shell[data-appearance="light"] .layer-row > b,
+.presentation-shell[data-appearance="light"] .framework-row > div > b,
+.presentation-shell[data-appearance="light"] .range-field b,
+.presentation-shell[data-appearance="light"] .cost-total,
+.presentation-shell[data-appearance="light"] .cost-bars b,
+.presentation-shell[data-appearance="light"] .cost-optimizations > b,
+.presentation-shell[data-appearance="light"] .stakeholder-list b,
+.presentation-shell[data-appearance="light"] .summary-grid b {
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .range-field input {
+  background: linear-gradient(90deg, var(--accent-strong) 0%, var(--accent-strong) var(--range-progress), var(--neutral-fill) var(--range-progress), var(--neutral-fill) 100%);
+}
+
+.presentation-shell[data-appearance="light"] .range-field input::-webkit-slider-thumb,
+.presentation-shell[data-appearance="light"] .range-field input::-moz-range-thumb {
+  border-color: var(--accent-ink);
+  background: var(--accent);
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, .2);
+}
+
+.presentation-shell[data-appearance="light"] .lens-row,
+.presentation-shell[data-appearance="light"] .life-step,
+.presentation-shell[data-appearance="light"] .life-step.active,
+.presentation-shell[data-appearance="light"] .check-list div,
+.presentation-shell[data-appearance="light"] .lifecycle-side b,
+.presentation-shell[data-appearance="light"] .stakeholder-list small,
+.presentation-shell[data-appearance="light"] .signal-list > div,
+.presentation-shell[data-appearance="light"] .monitor-foot,
+.presentation-shell[data-appearance="light"] .phase-facts b,
+.presentation-shell[data-appearance="light"] .phase-footer,
+.presentation-shell[data-appearance="light"] .raci-row,
+.presentation-shell[data-appearance="light"] .governance-footer span {
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .life-step > span,
+.presentation-shell[data-appearance="light"] .focus-icon,
+.presentation-shell[data-appearance="light"] .gov-center,
+.presentation-shell[data-appearance="light"] .g-node,
+.presentation-shell[data-appearance="light"] .case-icon,
+.presentation-shell[data-appearance="light"] .journey-stage-node {
+  border-color: var(--line);
+  background: var(--panel2);
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .life-step.active > span,
+.presentation-shell[data-appearance="light"] .life-step.done > span {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  box-shadow: none;
+}
+
+.presentation-shell[data-appearance="light"] .stage-insight,
+.presentation-shell[data-appearance="light"] .rag-playbook,
+.presentation-shell[data-appearance="light"] .rag-playbook-panel,
+.presentation-shell[data-appearance="light"] .framework-table,
+.presentation-shell[data-appearance="light"] .control-explorer,
+.presentation-shell[data-appearance="light"] .governance-card {
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-heading h3,
+.presentation-shell[data-appearance="light"] .rag-playbook-intro h4,
+.presentation-shell[data-appearance="light"] .rag-playbook-table-wrap h5,
+.presentation-shell[data-appearance="light"] .rag-playbook-table td,
+.presentation-shell[data-appearance="light"] .rag-playbook-table th {
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-heading > p,
+.presentation-shell[data-appearance="light"] .rag-playbook-intro > p,
+.presentation-shell[data-appearance="light"] .rag-playbook-disclaimer,
+.presentation-shell[data-appearance="light"] .retrieved p,
+.presentation-shell[data-appearance="light"] .source-meta,
+.presentation-shell[data-appearance="light"] .tiny.muted {
+  color: var(--muted);
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-table th,
+.presentation-shell[data-appearance="light"] .table-header,
+.presentation-shell[data-appearance="light"] .raci-header {
+  background: var(--panel2);
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-table td,
+.presentation-shell[data-appearance="light"] .table-header,
+.presentation-shell[data-appearance="light"] .framework-row,
+.presentation-shell[data-appearance="light"] .layer-row,
+.presentation-shell[data-appearance="light"] .stakeholder-list > div,
+.presentation-shell[data-appearance="light"] .info-columns div {
+  border-color: var(--line-soft);
+}
+
+.presentation-shell[data-appearance="light"] .retrieved .answer,
+.presentation-shell[data-appearance="light"] .retrieved-tag,
+.presentation-shell[data-appearance="light"] .stage-count,
+.presentation-shell[data-appearance="light"] .info-columns span,
+.presentation-shell[data-appearance="light"] .control-detail > div span,
+.presentation-shell[data-appearance="light"] .vpc-label,
+.presentation-shell[data-appearance="light"] .service-node i {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .cloud-callout,
+.presentation-shell[data-appearance="light"] .cloud-callout b,
+.presentation-shell[data-appearance="light"] .service-description p,
+.presentation-shell[data-appearance="light"] .info-columns b,
+.presentation-shell[data-appearance="light"] .control-detail p,
+.presentation-shell[data-appearance="light"] .vendor-note b,
+.presentation-shell[data-appearance="light"] .mini-tags {
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .architecture-glow {
+  background: rgba(163, 230, 53, .2);
+}
+
+.presentation-shell[data-appearance="light"] .stack-cube .cube-label,
+.presentation-shell[data-appearance="light"] .stack-cube .cube-layer {
+  border-color: var(--accent-hover);
+  background: var(--accent-tint);
+  box-shadow: none;
+  color: var(--accent-ink);
+}
+
+.presentation-shell[data-appearance="light"] .floating-node {
+  border-color: var(--line);
+  background: #ffffff;
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .layer-row.active > b,
+.presentation-shell[data-appearance="light"] .workflow-step b,
+.presentation-shell[data-appearance="light"] .workflow-step > span {
+  color: var(--accent-ink);
+}
+
+.presentation-shell[data-appearance="light"] .cube-layer.active {
+  border-color: var(--accent-strong);
+  background: var(--accent-pale);
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .control-detail,
+.presentation-shell[data-appearance="light"] .control-table button,
+.presentation-shell[data-appearance="light"] .service-node,
+.presentation-shell[data-appearance="light"] .delivery-node,
+.presentation-shell[data-appearance="light"] .metric-grid > button,
+.presentation-shell[data-appearance="light"] .roi-kpis > .metric,
+.presentation-shell[data-appearance="light"] .workflow-step,
+.presentation-shell[data-appearance="light"] .raci-table {
+  border-color: var(--line-soft);
+}
+
+.presentation-shell[data-appearance="light"] .security-intro h3 em,
+.presentation-shell[data-appearance="light"] .decision-question > span,
+.presentation-shell[data-appearance="light"] .decision-error,
+.presentation-shell[data-appearance="light"] .lens-row.active,
+.presentation-shell[data-appearance="light"] .discovery-demo-status.positive {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .security-stack div,
+.presentation-shell[data-appearance="light"] .mini-tags,
+.presentation-shell[data-appearance="light"] .monitor-foot,
+.presentation-shell[data-appearance="light"] .governance-footer span,
+.presentation-shell[data-appearance="light"] .phase-facts > div,
+.presentation-shell[data-appearance="light"] .phase-footer {
+  border-color: var(--line-soft);
+}
+
+.presentation-shell[data-appearance="light"] .security-stack div svg,
+.presentation-shell[data-appearance="light"] .delivery-practices svg,
+.presentation-shell[data-appearance="light"] .check-list span.checked {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .security-shield,
+.presentation-shell[data-appearance="light"] .security-shield::before,
+.presentation-shell[data-appearance="light"] .shield-ring,
+.presentation-shell[data-appearance="light"] .governance-orbit::before,
+.presentation-shell[data-appearance="light"] .governance-orbit::after {
+  border-color: rgba(101, 163, 13, .28);
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .monitor-layout .metric-grid > button {
+  background: #ffffff;
+}
+
+.presentation-shell[data-appearance="light"] .signal-list i,
+.presentation-shell[data-appearance="light"] .cost-bars i {
+  background: var(--neutral-fill);
+}
+
+.presentation-shell[data-appearance="light"] .signal-list em,
+.presentation-shell[data-appearance="light"] .cost-bars em {
+  background: var(--accent);
+}
+
+.presentation-shell[data-appearance="light"] .cost-total,
+.presentation-shell[data-appearance="light"] .roi-hero strong {
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .roi-hero {
+  background: var(--accent-tint);
+}
+
+.presentation-shell[data-appearance="light"] .roi-hero > span,
+.presentation-shell[data-appearance="light"] .roi-hero small {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .workflow-step.deterministic,
+.presentation-shell[data-appearance="light"] .workflow-step.human {
+  border-color: var(--line);
+  background: var(--surface-soft);
+}
+
+.presentation-shell[data-appearance="light"] .workflow-label,
+.presentation-shell[data-appearance="light"] .human-note {
+  border-color: var(--line-soft);
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .commercial-flow .workflow-step.human > span {
+  color: #9a3412;
+}
+
+.presentation-shell[data-appearance="light"] .search-backdrop,
+.presentation-shell[data-appearance="light"] .menu-backdrop {
+  background: rgba(15, 23, 42, .34);
+}
+
+.presentation-shell[data-appearance="light"] .search-dialog,
+.presentation-shell[data-appearance="light"] .contents-panel {
+  border-color: var(--line);
+  background: #ffffff;
+  box-shadow: 0 24px 70px rgba(15, 23, 42, .18);
+}
+
+.presentation-shell[data-appearance="light"] .search-dialog-header h2,
+.presentation-shell[data-appearance="light"] .contents-head h2 {
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .global-search-box:focus-within {
+  border-color: var(--accent-strong);
+  box-shadow: 0 0 0 3px rgba(163, 230, 53, .18);
+}
+
+.presentation-shell[data-appearance="light"] .search-suggestions > button {
+  border-color: var(--line);
+  background: var(--surface-soft);
+}
+
+.presentation-shell[data-appearance="light"] .search-result:hover,
+.presentation-shell[data-appearance="light"] .search-result:focus-visible,
+.presentation-shell[data-appearance="light"] .contents-list > button:hover,
+.presentation-shell[data-appearance="light"] .contents-list > button.active {
+  background: var(--accent-tint);
+}
+
+.presentation-shell[data-appearance="light"] .search-result,
+.presentation-shell[data-appearance="light"] .search-dialog-footer,
+.presentation-shell[data-appearance="light"] .contents-list > button {
+  border-color: var(--line-soft);
+}
+
+.presentation-shell[data-appearance="light"] .search-result b,
+.presentation-shell[data-appearance="light"] .result-section,
+.presentation-shell[data-appearance="light"] .contents-list > button > span:first-child,
+.presentation-shell[data-appearance="light"] .journey-stage-node {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .journey-stage-node {
+  border-color: var(--accent);
+  background: var(--accent-tint);
+}
+
+.presentation-shell[data-appearance="light"] .journey-stage-name {
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .journey-train {
+  border-color: var(--accent-strong);
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+  filter: drop-shadow(0 2px 6px rgba(101, 163, 13, .2));
+}
+
+.presentation-shell[data-appearance="light"] .stage-journey {
+  border-color: var(--line-soft);
+}
+
+.presentation-shell[data-appearance="light"] .stage-journey-track::before {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 7px, rgba(101, 163, 13, .38) 7px 9px, transparent 9px 15px),
+    linear-gradient(to bottom, transparent 0 1px, rgba(101, 163, 13, .62) 1px 2px, transparent 2px 6px, rgba(101, 163, 13, .62) 6px 7px, transparent 7px);
+}
+
+.presentation-shell[data-appearance="light"] .pipeline-transport > button {
+  border-color: var(--line);
+  background: #ffffff;
+  color: var(--text-strong);
+}
+
+.presentation-shell[data-appearance="light"] .pipeline-transport > button:first-child:not(:disabled) {
+  border-color: var(--accent-strong);
+  background: var(--accent);
+  color: var(--text);
+}
+
+.presentation-shell[data-appearance="light"] .layer-actions > button,
+.presentation-shell[data-appearance="light"] .secondary-button {
+  color: #f8fafc;
+}
+
+.presentation-shell[data-appearance="light"] .layer-actions > button:hover,
+.presentation-shell[data-appearance="light"] .layer-actions > button.reviewed {
+  border-color: var(--accent-strong);
+  background: var(--accent-ink);
+  color: #ffffff;
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-table {
+  background: #ffffff;
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-table th {
+  background: var(--panel2);
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-table td {
+  border-color: var(--line-soft);
+  color: var(--text-strong);
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-table td:first-child {
+  color: var(--accent-ink);
+}
+
+.presentation-shell[data-appearance="light"] .rag-playbook-table tbody tr:hover {
+  background: var(--accent-tint);
+}
+
+.presentation-shell[data-appearance="light"] .rag-size-cards > div,
+.presentation-shell[data-appearance="light"] .rag-playbook-tips > div,
+.presentation-shell[data-appearance="light"] .rag-no-match,
+.presentation-shell[data-appearance="light"] .decision-rationale,
+.presentation-shell[data-appearance="light"] .workshop-prompt,
+.presentation-shell[data-appearance="light"] .discovery-demo-hint,
+.presentation-shell[data-appearance="light"] .discovery-demo-status,
+.presentation-shell[data-appearance="light"] .cost-assumptions,
+.presentation-shell[data-appearance="light"] .team-chip,
+.presentation-shell[data-appearance="light"] .raci-legend span {
+  border-color: var(--line-soft);
+  background: var(--surface-soft);
+}
+
+.presentation-shell[data-appearance="light"] .rag-size-cards b,
+.presentation-shell[data-appearance="light"] .rag-playbook-tips > div > b,
+.presentation-shell[data-appearance="light"] .rag-no-match > b,
+.presentation-shell[data-appearance="light"] .workshop-prompt > span,
+.presentation-shell[data-appearance="light"] .discovery-demo-status > div > b,
+.presentation-shell[data-appearance="light"] .decision-rationale {
+  color: var(--text-strong);
+}
+
+.presentation-shell[data-appearance="light"] .rag-size-cards span,
+.presentation-shell[data-appearance="light"] .rag-playbook-tips > div > p,
+.presentation-shell[data-appearance="light"] .rag-no-match > span,
+.presentation-shell[data-appearance="light"] .discovery-demo-status > p,
+.presentation-shell[data-appearance="light"] .discovery-demo-status > small,
+.presentation-shell[data-appearance="light"] .cost-assumptions span,
+.presentation-shell[data-appearance="light"] .cost-assumptions b {
+  color: var(--muted);
+}
+
+.presentation-shell[data-appearance="light"] .discovery-demo-status.positive {
+  border-color: var(--success-border);
+  background: var(--success-bg);
+}
+
+.presentation-shell[data-appearance="light"] .discovery-demo-status.negative,
+.presentation-shell[data-appearance="light"] .candidate-card.warning {
+  border-color: #fdba74;
+  background: #fff7ed;
+}
+
+.presentation-shell[data-appearance="light"] .discovery-demo-hint {
+  border-left-color: var(--accent-strong);
+  color: var(--text-secondary);
+}
+
+.presentation-shell[data-appearance="light"] .decision-rationale {
+  border-left-color: var(--accent-strong);
+}
+
+.presentation-shell[data-appearance="light"] .roadmap-phase > span,
+.presentation-shell[data-appearance="light"] .phase-gate {
+  border-color: var(--line);
+  background: var(--panel2);
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .roadmap-phase.active > span,
+.presentation-shell[data-appearance="light"] .roadmap-phase.done > span {
+  border-color: var(--accent-strong);
+  background: var(--accent-soft);
+  color: var(--accent-ink);
+  box-shadow: none;
+}
+
+.presentation-shell[data-appearance="light"] .roadmap-phase.active > b,
+.presentation-shell[data-appearance="light"] .roadmap-phase > small,
+.presentation-shell[data-appearance="light"] .phase-facts span,
+.presentation-shell[data-appearance="light"] .team-chip,
+.presentation-shell[data-appearance="light"] .raci-legend span,
+.presentation-shell[data-appearance="light"] .raci-cell {
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .team-chip,
+.presentation-shell[data-appearance="light"] .raci-cell {
+  border-color: var(--line);
+  background: var(--panel2);
+}
+
+.presentation-shell[data-appearance="light"] .raci-cell.a,
+.presentation-shell[data-appearance="light"] .raci-cell.r,
+.presentation-shell[data-appearance="light"] .raci-cell.c,
+.presentation-shell[data-appearance="light"] .raci-cell.i {
+  background: var(--accent-tint);
+  color: var(--accent-ink);
+}
+
+.presentation-shell[data-appearance="light"] .score-ring {
+  border-color: var(--accent-strong);
+  box-shadow: inset 0 0 13px rgba(163, 230, 53, .2);
+}
+
+.presentation-shell[data-appearance="light"] .roi-hero {
+  border-color: var(--accent-pale);
+}
+
+.presentation-shell[data-appearance="light"] .case-icon {
+  border-color: var(--accent-pale);
+  background: var(--accent-tint);
+  color: var(--accent-deep);
+}
+
+.presentation-shell[data-appearance="light"] .summary-recommendation {
+  border-left-color: var(--accent-strong);
+}
+
+.presentation-shell[data-appearance="light"] .summary-grid div,
+.presentation-shell[data-appearance="light"] .summary-recommendation,
+.presentation-shell[data-appearance="light"] .summary-footer {
+  border-color: var(--line-soft);
+}
+
+.presentation-shell[data-appearance="light"] .journey-stage-name {
+  animation-name: light-journey-label-pulse;
+}
+
+.presentation-shell[data-appearance="light"] .journey-stage-node {
+  animation-name: light-journey-stop-pulse;
+}
+
+.presentation-shell[data-appearance="light"] .guided-play-target {
+  outline-color: var(--accent-strong) !important;
+  box-shadow: 0 0 0 5px rgba(163, 230, 53, .18), 0 0 20px rgba(101, 163, 13, .2) !important;
+}
+
+@keyframes light-journey-stop-pulse {
+  0%, 5%, 100% {
+    border-color: var(--accent);
+    background: var(--accent-tint);
+    box-shadow: none;
+    transform: scale(1);
+  }
+  2%, 3.5% {
+    border-color: var(--accent-strong);
+    background: var(--accent-pale);
+    box-shadow: 0 0 16px rgba(101, 163, 13, .3);
+    transform: scale(1.34);
+  }
+}
+
+@keyframes light-journey-label-pulse {
+  0%, 5%, 100% {
+    color: var(--text-secondary);
+    text-shadow: none;
+    transform: scale(1);
+  }
+  2%, 3.5% {
+    color: var(--accent-ink);
+    text-shadow: 0 0 8px rgba(163, 230, 53, .55);
+    transform: scale(1.15);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .presentation-shell[data-appearance="light"] *,
+  .presentation-shell[data-appearance="light"] *::before,
+  .presentation-shell[data-appearance="light"] *::after {
+    scroll-behavior: auto !important;
+  }
+}
+
+@media (max-height: 760px) {
+  .presentation-shell[data-appearance="light"] .slide-title-row {
+    margin-bottom: 12px;
+  }
+
+  .presentation-shell[data-appearance="light"] .vision-grid {
+    min-height: 0;
+  }
+
+  .presentation-shell[data-appearance="light"] .visual-orbit {
+    min-height: 225px;
+  }
+
+  .presentation-shell[data-appearance="light"] .stage-journey {
+    padding-top: 7px;
+  }
+
+  .presentation-shell[data-appearance="light"] .stage-journey-heading {
+    margin-bottom: 6px;
+  }
+}
+
+@media (max-width: 380px) {
+  .topbar-actions {
+    gap: 4px;
+  }
+
+  .topbar-actions .icon-button {
+    width: 29px;
+    height: 29px;
+  }
+}
