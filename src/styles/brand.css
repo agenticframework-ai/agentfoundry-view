@@ -2,7 +2,22 @@
   font-size: 12px;
 }
 
-.brand-name > span {
+.brand-name > .brand-title {
+  color: #d4af37 !important;
+  font: inherit;
+  letter-spacing: inherit;
+  white-space: nowrap;
+}
+
+.brand-trademark {
+  font-size: 6px;
+  letter-spacing: 0;
+  line-height: 0;
+  margin-left: 2px;
+  vertical-align: super;
+}
+
+.brand-name > .brand-subtitle {
   color: #8195ae;
   font:600 8px Manrope, sans-serif;
   letter-spacing: .25px;
@@ -10,7 +25,7 @@
 }
 
 @media (max-width: 650px) {
-  .brand-name > span {
+  .brand-name > .brand-subtitle {
     font-size: 7px;
     letter-spacing: .1px;
   }

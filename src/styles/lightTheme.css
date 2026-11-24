@@ -49,12 +49,16 @@
 .presentation-shell[data-appearance="light"] .slide-eyebrow,
 .presentation-shell[data-appearance="light"] .bottom-left,
 .presentation-shell[data-appearance="light"] .contents-button,
-.presentation-shell[data-appearance="light"] .brand-name > span,
+.presentation-shell[data-appearance="light"] .brand-subtitle,
 .presentation-shell[data-appearance="light"] .slide-subtitle,
 .presentation-shell[data-appearance="light"] .muted,
 .presentation-shell[data-appearance="light"] .small,
 .presentation-shell[data-appearance="light"] .tiny {
   color: var(--muted) !important;
+}
+
+.presentation-shell[data-theme="light"] .brand-title {
+  color: #806000 !important;
 }
 
 .presentation-shell[data-appearance="light"] .topbar-center i,

@@ -33,6 +33,10 @@
   color: #17211c;
 }
 
+.presentation-shell[data-theme="sage"] .brand-title {
+  color: #806000 !important;
+}
+
 .presentation-shell[data-theme="sage"] .topbar {
   border-color: #e2e8e4;
   background: #ffffff;

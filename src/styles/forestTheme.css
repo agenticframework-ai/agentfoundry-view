@@ -44,7 +44,7 @@
   color: #ffffff !important;
 }
 
-.presentation-shell[data-theme="forest"] .brand-name > span,
+.presentation-shell[data-theme="forest"] .brand-subtitle,
 .presentation-shell[data-theme="forest"] .presentation-playback-status {
   color: #d1d5d3 !important;
 }
