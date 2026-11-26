@@ -539,7 +539,7 @@ function Monitoring() {
 
 function EmbeddedHtmlFrame({assetName,className,title}) {
   const assetBase=import.meta.env.BASE_URL.replace(/\/+$/,'');
-  const assetUrl=`${assetBase}/${assetName}`;
+  const assetUrl=`${assetBase}/${assetName}?embedded=1`;
   const [html,setHtml]=useState('');
   const [loadError,setLoadError]=useState('');
   useEffect(()=>{
