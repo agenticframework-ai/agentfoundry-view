@@ -3,7 +3,7 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
-  base: '/agentic_framework_st',
+  base: '/agentfoundry-view',
   build: {
     rollupOptions: {
       output: {
