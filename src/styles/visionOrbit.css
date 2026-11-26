@@ -144,7 +144,7 @@
   position: relative;
   display: grid;
   grid-template-columns: repeat(17, minmax(0, 1fr));
-  min-width: 930px;
+  min-width: 1200px;
   padding: 2px 0 1px;
 }
 
@@ -202,6 +202,14 @@
   white-space: nowrap;
   animation: journey-label-pulse 34s linear infinite;
   animation-delay: var(--stage-delay);
+}
+
+.journey-stage:nth-child(12) .journey-stage-name,
+.journey-stage:nth-child(13) .journey-stage-name {
+  overflow: visible;
+  line-height: 1.15;
+  text-overflow: clip;
+  white-space: normal;
 }
 
 .journey-stage:hover .journey-stage-node,

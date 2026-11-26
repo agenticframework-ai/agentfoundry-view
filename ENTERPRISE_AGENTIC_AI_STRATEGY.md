@@ -15,7 +15,7 @@ Build a complete, responsive web presentation using:
 - Tailwind CSS or modern custom CSS
 - Framer Motion for animations
 - Mermaid.js or React Flow for architecture diagrams
-- Recharts for business and ROI visualizations
+- Recharts for monitoring and cost visualizations
 - Lucide icons
 The application must be executable locally and deployable as a static website.
 
@@ -55,7 +55,7 @@ Presentation features:
 - Table of contents / navigation menu.
 - Expandable architecture components.
 - Hover interactions and animated KPI cards.
-- Interactive decision trees and ROI calculators.
+- Interactive decision trees, model benchmarking and cost estimation.
 - Download / print-friendly presentation mode.
 The content must be suitable for a real customer meeting, not a generic AI landing page.
 
@@ -399,69 +399,35 @@ Show:
 - SLA / SLO.
 Include sample charts with illustrative data.
 
-### Section 13: Enterprise FinOps and Cost Optimization
-Show an interactive AI cost calculator.
+### Section 13: AI Model Intelligence and Benchmarking
+Embed the supplied AI model benchmarking experience as an interactive, self-contained page.
 
 Include:
 
-- Model input tokens.
-- Model output tokens.
-- Embedding costs.
-- Vector database.
-- Infrastructure.
-- Network.
-- Logging and monitoring.
-- Security platforms.
-- Human review.
-- Support and operations.
-Explain:
+- Simulated example profiles and task-specific model comparisons.
+- Quality, reasoning, tool selection and execution, structured output, evidence, completion, hallucination and security metrics.
+- P50/P95 latency, token usage, infrastructure assumptions and cost per successful task.
+- Editable workload profiles, model prices and mandatory quality/readiness thresholds.
+- Objective selection for lowest qualifying cost, highest accuracy within budget, lowest latency within SLA, best cost per successful task, or production readiness.
+- CSV/JSON upload for experiment or production telemetry, plus CSV and JSON report exports.
+- Clear labeling that preloaded examples are simulated and vendor prices are placeholders.
 
-- Model routing.
-- Smaller model selection.
-- Prompt optimization.
-- Context trimming.
-- Caching.
-- Batching.
-- Retrieval optimization.
-- Token budgeting.
-- Agent loop prevention.
-- Cost per successful task.
-Allow the customer to change monthly volume and token assumptions and see estimated costs update.
+Mandatory thresholds must act as pass/fail gates, not weighted scores; a model that misses any required threshold must not be recommended.
 
-Clearly label all prices as configurable assumptions, not current vendor quotations.
+### Section 14: Cloud Service Cost Estimation
+Embed the supplied cloud pricing calculator as an interactive, self-contained page.
 
-### Section 14: Business ROI and Value Realization
-Create an interactive ROI calculator.
+Include:
 
-Inputs:
+- Compare equivalent services across AWS, Azure and Google Cloud.
+- Configure quantities, hours per month, custom services and unit prices.
+- Apply regional price adjustments and eligible commitment discounts.
+- Edit the service-rate table and calculate monthly costs for each provider.
+- Load example web application and Kubernetes estimates.
+- Open official provider calculators or load them in the embedded frame where allowed.
+- Keep live price fetching optional; it requires the separately configured backend described in the calculator.
 
-- Monthly transaction volume.
-- Current processing time.
-- Future processing time.
-- Loaded hourly cost.
-- Error and rework rates.
-- AI operating cost.
-- Implementation investment.
-Outputs:
-
-- Current operational cost.
-- Future operational cost.
-- Net monthly savings.
-- Annual benefit.
-- Payback period.
-- ROI.
-- Three-year TCO.
-Separate:
-
-- Cash savings.
-- Capacity released.
-- Cost avoidance.
-- Revenue uplift.
-- Risk reduction.
-Include a three-year value roadmap:
-Year 1 – Prove and establish.
-Year 2 – Optimize and scale.
-Year 3 – Transform and innovate.
+Clearly label editable and sample rates as estimates; confirm current prices in the official provider calculators.
 
 ### Section 15: Enterprise Use Cases
 Include interactive use-case cards for:
@@ -548,8 +514,8 @@ Implement these working interactions:
 5. Framework selection matrix.
 6. Security threat and control explorer.
 7. Cloud infrastructure architecture explorer.
-8. AI cost calculator.
-9. Business ROI calculator.
+8. AI model benchmark with experiment/telemetry upload, threshold-based ranking and report export.
+9. Cloud and AI operating cost estimator.
 10. Production monitoring dashboard.
 11. POC-to-production roadmap.
 12. Customer discovery questionnaire.
@@ -559,7 +525,7 @@ All interactive controls must work and update the displayed content.
 ## 5. Presentation storytelling
 The presentation should follow this narrative:
 
-Business Challenge → AI Opportunity → Should We Use Agents? → Target Architecture → Framework Selection → Data and RAG → Infrastructure → Security → Governance → Development → Deployment → Monitoring → Cost → ROI → POC → Production → Enterprise Scale.
+Business Challenge → AI Opportunity → Should We Use Agents? → Target Architecture → Framework Selection → Data and RAG → Infrastructure → Security → Governance → Development → Deployment → Monitoring → Model Benchmarking → Cloud Estimation → POC → Production → Enterprise Scale.
 
 Make it possible to present the complete strategy in a 30–45-minute customer meeting.
 

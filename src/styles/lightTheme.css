@@ -158,7 +158,7 @@
 }
 
 .presentation-shell[data-appearance="light"] .slide-number-watermark {
-  color: rgba(17, 24, 39, .06);
+  color: rgba(17, 24, 39, .32);
 }
 
 .presentation-shell[data-appearance="light"] .mini-progress button.active {

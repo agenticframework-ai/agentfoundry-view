@@ -1,6 +1,6 @@
 # Enterprise Agentic AI Strategy Framework
 
-An interactive, browser-based executive briefing and customer workshop tool. It presents 18 connected strategy sections—from opportunity discovery and agent suitability through architecture, security, operations, value and an executive action brief.
+An interactive, browser-based executive briefing and customer workshop tool. It presents 18 connected sections—from opportunity discovery and agent suitability through architecture, security, operations, AI model benchmarking, cloud cost estimation and an executive action brief.
 
 ## Run locally
 
@@ -24,7 +24,7 @@ Open the local URL printed by Vite (normally `http://localhost:5173`). Create a 
 
 ## Interactive sections
 
-The presentation includes a discovery canvas, weighted suitability calculator, clickable architecture layers, framework filter, RAG pipeline and sample retrieval, lifecycle explorer, AWS/Azure/GCP service mapping, threat/control/evidence explorer, governance model, release pipeline, illustrative monitoring dashboard, configurable monthly cost and ROI calculators, use-case workflow, roadmap gates, RACI matrix and summary generator.
+The presentation includes a discovery canvas, weighted suitability calculator, clickable architecture layers, framework filter, RAG pipeline and sample retrieval, lifecycle explorer, AWS/Azure/GCP service mapping, threat/control/evidence explorer, governance model, release pipeline, illustrative monitoring dashboard, AI model benchmarking with CSV/JSON import and export, an interactive cloud service cost estimator comparing AWS, Azure and Google Cloud, use-case workflow, roadmap gates, RACI matrix and summary generator.
 
 ## Assumptions and responsible use
 

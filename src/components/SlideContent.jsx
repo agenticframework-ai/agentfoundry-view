@@ -1,14 +1,12 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { ArrowRight, ArrowUp, Check, ChevronRight, CircleHelp, Download, LockKeyhole, Play, RotateCcw, Scale, Shield, Sparkles, Square, ThumbsDown, ThumbsUp, TrainFront } from 'lucide-react';
+import { ArrowRight, ArrowUp, Check, ChevronRight, CircleHelp, Download, LockKeyhole, Play, Scale, Shield, Sparkles, Square, ThumbsDown, ThumbsUp, TrainFront } from 'lucide-react';
 import { architectureLayers, cloudServices, frameworks, lifecycle, phases, ragStages, securityControls, slides, useCases } from '../data/strategy.js';
 import { discoveryTestCases } from '../data/discoveryTestData.js';
 import { ragDemoKnowledge, ragPlaybookSections, ragPlaybookStages, ragStageGuidance, ragStagePlaybooks } from '../data/ragPlaybook.js';
 import { Card, Metric, Pill, Range, SectionHeading } from './UI.jsx';
 
-const money = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', maximumFractionDigits: 0 }).format(n);
-const moneyPrecise = n => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(n);
 const chartTip = { background: '#101c2c', border: '1px solid #26384e', borderRadius: 10, color: '#eaf2ff' };
 const discoveryPrompts=['Business objective','Process bottleneck','Manual effort / cost','Customer impact','Data sources & quality','Applications / integration','Regulatory constraints','Success KPI'];
 const decisionProsCons=[
@@ -539,154 +537,52 @@ function Monitoring() {
   </div>;
 }
 
-function FinOps() {
-  const [volume,setVolume]=useState(50000);
-  const [inTokens,setIn]=useState(2600);
-  const [outTokens,setOut]=useState(650);
-  const [inputPrice,setInputPrice]=useState(4);
-  const [outputPrice,setOutputPrice]=useState(12);
-  const [successRate,setSuccessRate]=useState(92);
-  const [embeddingCostPerTask,setEmbeddingCostPerTask]=useState(.00003);
-  const [vectorDatabase,setVectorDatabase]=useState(420);
-  const [infrastructure,setInfrastructure]=useState(780);
-  const [network,setNetwork]=useState(140);
-  const [logging,setLogging]=useState(230);
-  const [security,setSecurity]=useState(320);
-  const [reviewRate,setReviewRate]=useState(8);
-  const [reviewCost,setReviewCost]=useState(.42);
-  const [support,setSupport]=useState(600);
-  const inputCost=volume*inTokens*inputPrice/1000000;
-  const outputCost=volume*outTokens*outputPrice/1000000;
-  const embeddingCost=volume*embeddingCostPerTask;
-  const humanReviewCost=volume*(reviewRate/100)*reviewCost;
-  const categories=[
-    {name:'Model input tokens',value:inputCost},
-    {name:'Model output tokens',value:outputCost},
-    {name:'Embedding costs',value:embeddingCost},
-    {name:'Vector database',value:vectorDatabase},
-    {name:'Infrastructure',value:infrastructure},
-    {name:'Network',value:network},
-    {name:'Logging and monitoring',value:logging},
-    {name:'Security platforms',value:security},
-    {name:'Human review',value:humanReviewCost},
-    {name:'Support and operations',value:support}
-  ];
-  const total=categories.reduce((sum,category)=>sum+category.value,0);
-  const costPerSuccessfulTask=total/(volume*successRate/100);
-  const costField=(label,value,setter,step)=> <label className="cost-assumption-field" key={label}><span>{label}</span><input type="number" min="0" step={step} value={value} onChange={event=>setter(Math.max(0,Number(event.target.value)))}/></label>;
-  const optimizationLevers=[
-    ['Model routing','Send each task to the lowest-cost model that meets its quality, latency, privacy, and risk requirements.'],
-    ['Smaller model selection','Benchmark smaller models on representative tasks; promote them only when quality and safety gates pass.'],
-    ['Prompt optimization','Remove redundant instructions and examples, then regression-test for quality before release.'],
-    ['Context trimming','Send only relevant, permission-checked context and cap unnecessary conversation history.'],
-    ['Caching','Reuse stable prompt prefixes and eligible results; respect freshness, tenant, and authorization boundaries.'],
-    ['Batching','Batch embedding and non-urgent work where provider limits and latency targets allow.'],
-    ['Retrieval optimization','Tune chunking, filters, top-k, and reranking to reduce irrelevant context and repeat retrieval.'],
-    ['Token budgeting','Set input/output limits per task, alert on budget drift, and stop work before limits are exhausted.'],
-    ['Agent loop prevention','Apply step, tool-call, and time limits; detect repeated states and stop unproductive loops.'],
-    ['Cost per successful task','Divide total operating spend by successfully completed tasks; track quality so cheaper failures do not look like savings.']
-  ];
-  return <div className="finops-layout">
-    <div className="calculator-layout">
-      <Card className="calculator-inputs">
-        <div className="card-title-row"><div><Pill>CHANGE THE ASSUMPTIONS</Pill><h3>Monthly operating model</h3></div><span className="assumption-badge">CONFIGURABLE · USD</span></div>
-        <Range label="Transactions / month" value={volume} min={5000} max={250000} step={5000} onChange={setVolume}/>
-        <Range label="Model input tokens / task" value={inTokens} min={500} max={10000} step={100} onChange={setIn}/>
-        <Range label="Model output tokens / task" value={outTokens} min={100} max={3000} step={50} onChange={setOut}/>
-        <Range label="Model input price / 1M tokens" value={inputPrice} min={1} max={30} step={1} onChange={setInputPrice} prefix="$"/>
-        <Range label="Model output price / 1M tokens" value={outputPrice} min={1} max={60} step={1} onChange={setOutputPrice} prefix="$"/>
-        <Range label="Successful task rate" value={successRate} min={50} max={100} step={1} onChange={setSuccessRate} suffix="%"/>
-        <div className="cost-assumptions">
-          <b className="cost-assumptions-heading">Additional monthly cost assumptions</b>
-          {costField('Embedding cost / task ($)',embeddingCostPerTask,setEmbeddingCostPerTask,.00001)}
-          {costField('Vector database / month ($)',vectorDatabase,setVectorDatabase,50)}
-          {costField('Infrastructure / month ($)',infrastructure,setInfrastructure,50)}
-          {costField('Network / month ($)',network,setNetwork,25)}
-          {costField('Logging & monitoring / month ($)',logging,setLogging,25)}
-          {costField('Security platforms / month ($)',security,setSecurity,25)}
-          {costField('Human review rate (%)',reviewRate,setReviewRate,1)}
-          {costField('Cost per human review ($)',reviewCost,setReviewCost,.05)}
-          {costField('Support & operations / month ($)',support,setSupport,25)}
-        </div>
-        <p className="tiny muted">Illustrative assumptions only—not vendor quotations. Replace them with measured usage and procurement rates.</p>
-      </Card>
-      <Card className="cost-result">
-        <Pill>ESTIMATED MONTHLY COST</Pill>
-        <div className="cost-total">{money(total)}<small>{moneyPrecise(costPerSuccessfulTask)} / successful task · {moneyPrecise(total/volume)} / attempt</small></div>
-        <p className="cost-success-definition">Cost per successful task = monthly operating cost ÷ successful tasks.</p>
-        <div className="cost-bars">{categories.map(category=><div key={category.name}><span>{category.name}</span><b>{money(category.value)}</b><i><em style={{width:`${Math.max(3,category.value/total*100)}%`}}/></i></div>)}</div>
-      </Card>
-    </div>
-    <Card className="finops-playbook">
-      <div className="card-title-row"><div><Pill>OPTIMIZATION PLAYBOOK</Pill><h3>Reduce unit cost without trading away quality.</h3></div></div>
-      <div className="finops-playbook-grid">{optimizationLevers.map(([title,description])=><div className="finops-lever" key={title}><b>{title}</b><p>{description}</p></div>)}</div>
-    </Card>
+function EmbeddedHtmlFrame({assetName,className,title}) {
+  const assetBase=import.meta.env.BASE_URL.replace(/\/+$/,'');
+  const assetUrl=`${assetBase}/${assetName}`;
+  const [html,setHtml]=useState('');
+  const [loadError,setLoadError]=useState('');
+  useEffect(()=>{
+    const controller=new AbortController();
+    fetch(assetUrl,{signal:controller.signal})
+      .then(response=>{
+        if(!response.ok)throw new Error(`HTTP ${response.status}`);
+        return response.text();
+      })
+      .then(setHtml)
+      .catch(error=>{
+        if(!controller.signal.aborted)setLoadError(error instanceof Error?error.message:String(error));
+      });
+    return ()=>controller.abort();
+  },[assetUrl]);
+  if(loadError)return <p className="embedded-html-error" role="alert">Unable to load {title}: {loadError}</p>;
+  return <iframe
+      className={className}
+      title={title}
+      loading="eager"
+      referrerPolicy="no-referrer"
+      sandbox="allow-scripts allow-forms allow-downloads allow-popups"
+      srcDoc={html||undefined}
+    />;
+}
+
+function CloudCostEstimator() {
+  return <div className="cloud-cost-estimator">
+    <EmbeddedHtmlFrame
+      className="cloud-cost-estimator-frame"
+      assetName="cloud-cost-estimator.html"
+      title="Cloud pricing calculator comparing AWS, Azure and Google Cloud"
+    />
   </div>;
 }
 
-function ROI() {
-  const [volume,setVol]=useState(18000),[current,setCurrent]=useState(24),[future,setFuture]=useState(10),[hourly,setHourly]=useState(42),[aiCost,setAi]=useState(6000),[investment,setInvestment]=useState(180000);
-  const currentCost=volume*current/60*hourly;const futureCost=volume*future/60*hourly+aiCost;const savings=currentCost-futureCost;const annual=savings*12;const payback=savings>0?investment/savings:0;const roi=investment?((annual-investment)/investment)*100:0;const tco=investment+aiCost*36;
-  return <div className="roi-layout">
-    <Card className="roi-inputs">
-      <div className="card-title-row"><div><Pill>ILLUSTRATIVE BUSINESS CASE</Pill><h3>Change the baseline.</h3></div><RotateCcw size={15} onClick={()=>{setVol(18000);setCurrent(24);setFuture(10);setHourly(42);setAi(6000);setInvestment(180000)}}/></div>
-      <Range label="Monthly transaction volume" value={volume} min={1000} max={100000} step={1000} onChange={setVol}/>
-      <Range label="Current minutes / transaction" value={current} min={5} max={90} onChange={setCurrent}/>
-      <Range label="Future human minutes / transaction" value={future} min={0} max={60} onChange={setFuture}/>
-      <Range label="Loaded hourly cost" value={hourly} min={20} max={150} onChange={setHourly} prefix="$"/>
-      <Range label="AI operating cost / month" value={aiCost} min={500} max={50000} step={500} onChange={setAi} prefix="$"/>
-      <Range label="One-time implementation investment" value={investment} min={25000} max={1000000} step={25000} onChange={setInvestment} prefix="$"/>
-    </Card>
-    <div className="roi-results">
-      <div className="roi-hero"><span>NET MONTHLY BENEFIT · ESTIMATE</span><strong>{money(savings)}</strong><small>Capacity and cost estimate; validate which portion is cashable.</small></div>
-      <div className="roi-kpis">
-        <Metric label="Current labor baseline" value={money(currentCost)}/>
-        <Metric label="Future cost incl. AI" value={money(futureCost)}/>
-        <Metric label="Annualized benefit" value={money(annual)}/>
-        <Metric label="Payback" value={savings>0?`${payback.toFixed(1)} mo`:'—'}/>
-        <Metric label="3-year TCO" value={money(tco)}/>
-        <Metric label="Year 1 ROI" value={`${roi.toFixed(0)}%`}/>
-      </div>
-      <Card className="value-mix">
-        <div><Pill tone="violet">VALUE REALIZATION</Pill><p>Track outcomes separately</p></div>
-        {[
-          ['Cash savings','Prove reduced spend'],
-          ['Capacity released','Redeploy hours to priority work'],
-          ['Cost avoidance','Avoid future operating expense'],
-          ['Revenue uplift','Measure incremental conversion'],
-          ['Risk reduction','Track incidents and loss avoided']
-        ].map(x=><div key={x[0]}><b>{x[0]}</b><span>{x[1]}</span></div>)}
-      </Card>
-    </div>
-    <Card className="roi-business-case">
-      <div className="card-title-row"><div><Pill>ENTERPRISE BUSINESS CASE</Pill><h3>ROI formula and value drivers</h3></div></div>
-      <div className="roi-business-case-grid">
-        <section>
-          <h4>ROI formula</h4>
-          <p className="roi-formula">ROI (%) = ((Benefits - Costs) / Costs) × 100</p>
-        </section>
-        <section>
-          <h4>Benefits</h4>
-          <ul>
-            <li>Reduced manual processing cost.</li>
-            <li>Reduced turnaround time.</li>
-            <li>Increased processing capacity.</li>
-            <li>Lower error and rework rates.</li>
-            <li>Better customer experience.</li>
-            <li>Increased revenue or conversion where demonstrable.</li>
-          </ul>
-        </section>
-        <section>
-          <h4>Costs</h4>
-          <ul>
-            <li>One-time implementation investment.</li>
-            <li>Future human processing and review costs.</li>
-            <li>Ongoing AI operating costs.</li>
-          </ul>
-        </section>
-      </div>
-      <p className="roi-business-case-note"><b>Note:</b> Calculate payback period, net present value (NPV), and total cost of ownership (TCO) over three years rather than relying only on monthly token savings.</p>
-    </Card>
+function ModelBenchmark() {
+  return <div className="model-benchmark">
+    <EmbeddedHtmlFrame
+      className="model-benchmark-frame"
+      assetName="ai-model-benchmarking.html"
+      title="AI model performance, economics and production benchmark"
+    />
   </div>;
 }
 
@@ -714,7 +610,7 @@ function Executive() {
   return <div className="executive-layout"><Card className="executive-form"><Pill>WORKSHOP OUTPUT</Pill><h3>Build the decision brief.</h3><p className="muted">Capture what the room aligns on. Print or save this page as PDF.</p>{[['Opportunity','opportunity'],['Recommended pattern','pattern'],['Accountable sponsor','sponsor'],['Next milestone','target']].map(([label,key])=><label className="summary-input" key={key}><span>{label}</span><input value={form[key]} onChange={e=>setForm({...form,[key]:e.target.value})}/></label>)}<div className="executive-actions"><button className="primary-button" onClick={()=>setGenerated(true)}><Sparkles size={15}/> Generate summary</button><button className="secondary-button" onClick={()=>window.print()}><Download size={15}/> Print / PDF</button></div><div className="decision-checks"><span><Check/> Business owner named</span><span><Check/> Human accountability set</span><span><Check/> Production gate explicit</span></div></Card><Card className="brief-preview"><div className="brief-top"><Pill tone="violet">EXECUTIVE DECISION · DRAFT</Pill><span>AGENTIC AI STRATEGY</span></div><div className="brief-title"><div className="brand-mark mini">A<span>✦</span></div><div><div className="micro-label">CUSTOMER WORKSHOP SUMMARY</div><h3>{generated?'A focused path to measurable value':'The next move is clarity.'}</h3></div></div><div className="summary-grid"><div><span>OPPORTUNITY</span><b>{form.opportunity||'—'}</b></div><div><span>RECOMMENDED PATTERN</span><b>{form.pattern||'—'}</b></div><div><span>ACCOUNTABLE SPONSOR</span><b>{form.sponsor||'—'}</b></div><div><span>NEXT MILESTONE</span><b>{form.target||'—'}</b></div></div><div className="summary-recommendation"><span>RECOMMENDED ACTION</span><p>{generated?'Time-box discovery, confirm baseline and data permissions, then validate the workflow with a human-in-the-loop pilot.':'Align on a measurable workflow, baseline its performance and risk, and validate one bounded pattern before committing to scale.'}</p></div><div className="summary-footer">Illustrative strategy framework · Assumptions require customer validation · High-impact decisions need accountable human oversight</div></Card></div>;
 }
 
-const pageMap={1:Vision,2:Discovery,3:Decision,4:Architecture,5:Framework,6:RAG,7:Lifecycle,8:Cloud,9:Security,10:Governance,11:Delivery,12:Monitoring,13:FinOps,14:ROI,15:UseCases,16:Roadmap,17:OperatingModel,18:Executive};
+const pageMap={1:Vision,2:Discovery,3:Decision,4:Architecture,5:Framework,6:RAG,7:Lifecycle,8:Cloud,9:Security,10:Governance,11:Delivery,12:Monitoring,13:ModelBenchmark,14:CloudCostEstimator,15:UseCases,16:Roadmap,17:OperatingModel,18:Executive};
 export default function SlideContent({slide,demoRunToken=0,demoStopToken=0,onDiscoveryDemoComplete,onNavigate}) {
   if(slide===0)return <Vision onNavigate={onNavigate}/>;
   if(slide===1)return <Discovery demoRunToken={demoRunToken} demoStopToken={demoStopToken} onDemoComplete={onDiscoveryDemoComplete}/>;

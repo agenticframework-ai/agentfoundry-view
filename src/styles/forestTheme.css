@@ -154,7 +154,7 @@
 }
 
 .presentation-shell[data-theme="forest"] .slide-number-watermark {
-  color: rgba(255, 255, 255, .08);
+  color: rgba(17, 24, 39, .32);
 }
 
 .presentation-shell[data-theme="forest"] .slide-article[data-slide-index="0"] .orbit-core {

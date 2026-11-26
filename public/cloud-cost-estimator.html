@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cloud pricing calculator</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap">
+<style>
+:root{--bg:#f2f3f3;--panel:#fff;--ink:#0f1b2a;--mute:#5f6b7a;--line:#d5dbdb;--fld:#7d8998;--nav:#232f3e;--cta:#ec7211;--cta2:#eb5f07;--link:#0972d3;--hi:#e6f4ec;--soft:#f6f7f7;color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0f1b2a;--panel:#192534;--ink:#e9ebed;--mute:#9ba7b6;--line:#354150;--fld:#6b7787;--nav:#0a121c;--link:#539fe5;--hi:#16342a;--soft:#1f2d3d;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#0f1b2a;--panel:#192534;--ink:#e9ebed;--mute:#9ba7b6;--line:#354150;--fld:#6b7787;--nav:#0a121c;--link:#539fe5;--hi:#16342a;--soft:#1f2d3d;color-scheme:dark}
+*{box-sizing:border-box}
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 14px/1.5 "Open Sans",Helvetica,Arial,sans-serif;font-variant-numeric:tabular-nums}
+.top{background:var(--nav);color:#fff;padding:12px 20px;display:flex;align-items:center;gap:14px}
+.top b{font-size:17px}.top span{color:#c6cdd5;font-size:13px}
+.top i{width:26px;height:26px;border-radius:5px;background:var(--cta);display:inline-block}
+.wrap{max-width:1180px;margin:0 auto;padding:16px 18px 48px}
+.crumb{color:var(--mute);font-size:13px;margin-bottom:6px}
+h1{font-size:26px;margin:0 0 14px;font-weight:700}
+h2{font-size:18px;margin:0 0 4px;font-weight:700}
+.sub{color:var(--mute);margin:0 0 14px;font-size:13px}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:18px;margin-bottom:16px;box-shadow:0 1px 1px rgba(0,28,36,.12)}
+.stick{position:sticky;top:12px}
+.f{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px}
+@media (max-width:620px){.f{grid-template-columns:1fr}}
+.f .w{grid-column:1/-1}
+label{display:block;font-weight:700;font-size:14px}
+label small{display:block;font-weight:400;color:var(--mute);font-size:12px;margin:1px 0 5px}
+input,select{width:100%;font:inherit;color:var(--ink);background:var(--panel);border:1px solid var(--fld);border-radius:8px;padding:7px 10px}
+input:disabled{background:var(--soft);color:var(--mute)}
+:is(input,select,button,summary,a):focus-visible{outline:2px solid var(--link);outline-offset:1px}
+button{font:inherit;font-weight:700;border-radius:20px;padding:7px 18px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer}
+button.cta{background:var(--cta);border-color:var(--cta);color:#fff}
+button.cta:hover{background:var(--cta2);border-color:var(--cta2)}
+button.lnk{border:0;background:none;color:var(--link);padding:2px 6px;font-weight:600}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+fieldset{border:1px solid var(--line);border-radius:8px;margin:16px 0 0;padding:12px 14px}
+legend{font-weight:700;padding:0 6px}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top}
+th{font-size:13px;color:var(--mute);font-weight:700}
+th:first-child,td:first-child{text-align:left}
+td small{display:block;color:var(--mute);font-size:12px}
+td.min{background:var(--hi);font-weight:700}
+tfoot td{font-weight:700;border-bottom:0}
+tr.calc td{background:var(--soft);text-align:left;font-size:13px;white-space:normal}
+tr.calc p{margin:2px 0}
+tr.calc code{font-family:inherit;color:var(--mute)}
+[hidden]{display:none!important}
+.empty{color:var(--mute);padding:14px 0}
+.sum{border-left:5px solid;padding:8px 12px;margin:10px 0;background:var(--soft);border-radius:0 6px 6px 0}
+.sum b{display:block}.sum strong{font-size:22px;line-height:1.2}.sum span{display:block;color:var(--mute);font-size:12px}
+.tag{font-size:11px;background:var(--hi);padding:1px 7px;border-radius:99px;margin-left:6px;font-weight:600}
+.rates input{width:78px;padding:4px 6px}
+details{margin-top:4px}summary{cursor:pointer;font-weight:700;font-size:16px}
+.note{color:var(--mute);font-size:13px;max-width:80ch}
+.links{display:flex;gap:14px;flex-wrap:wrap;margin:8px 0}
+.links a{color:var(--link);font-weight:600}
+#fr{width:100%;height:600px;border:1px solid var(--line);border-radius:8px;background:#fff;margin-top:8px}
+</style>
+</head>
+<body>
+<div class="top"><i aria-hidden="true"></i><b>Cloud pricing calculator</b><span>Compare AWS, Azure and Google Cloud</span></div>
+<div class="wrap">
+<div class="crumb">Home &gt; Create estimate &gt; Add service</div>
+<h1>Configure service</h1>
+<div class="cols">
+<div>
+<section class="card">
+<h2>Service settings</h2>
+<p class="sub">Choose a service, set how much you need, and add it to your estimate. The same configuration is priced on all three clouds.</p>
+<div class="f">
+<label class="w">Service<small id="eq"></small><select id="fs"></select></label>
+<label class="w">Description (optional)<small>A name to recognise this line, such as “Web servers”.</small><input id="fd" type="text" maxlength="60"></label>
+<label>Quantity<small id="fu"></small><input id="fq" type="number" min="0" step="any" value="1"></label>
+<label>Hours per month<small>730 means always on.</small><input id="fh" type="number" min="0" max="744" value="730"></label>
+<label class="cu" hidden>Unit price (USD)<small>From the provider’s pricing page.</small><input id="cp" type="number" min="0" step="any" value="0"></label>
+<label class="cu" hidden>Billing basis<small>How this service is charged.</small><select id="cb"><option value="hr">Per hour</option><option value="mo">Per unit per month</option></select></label>
+</div>
+<fieldset><legend>Pricing strategy</legend>
+<div class="f">
+<label>Regional price adjustment (%)<small>Adds or subtracts from list prices.</small><input id="reg" type="number" min="-50" max="100" step="1" value="0"></label>
+<label>Commitment discount (%)<small>Applies to VMs and databases only.</small><input id="disc" type="number" min="0" max="80" step="1" value="0"></label>
+</div></fieldset>
+<div class="row"><button class="cta" id="add">Add to my estimate</button><button id="p1">Load web app example</button><button id="p2">Load Kubernetes example</button></div>
+</section>
+
+<section class="card">
+<h2>My estimate</h2>
+<p class="sub">Monthly cost per service. Choose “Show calculation” to see how each number is worked out.</p>
+<div class="scroll"><table id="cmp"></table></div>
+</section>
+
+<section class="card">
+<details><summary>Unit prices (editable, USD)</summary>
+<p class="note">Defaults are rounded on-demand list prices for a US region and Linux. Replace them with current prices, or use the live fetch when this page is served by the backend.</p>
+<div class="scroll rates"><table id="rt"></table></div>
+<div class="row"><select id="lreg" style="width:auto" aria-label="Region for live prices"><option value="us-east">US East</option><option value="eu-west">Europe (Ireland)</option><option value="ap-south">India (Mumbai)</option></select><button class="cta" id="live">Fetch live prices</button><button id="reset">Reset unit prices</button></div>
+<p class="note" id="lstat" role="status">Live prices need the backend: run <code>uvicorn server:app --port 8000</code> and open this page from http://localhost:8000.</p>
+</details>
+</section>
+
+<section class="card">
+<details><summary>Official calculators</summary>
+<div class="links">
+<a href="https://calculator.aws/#/addService" target="_blank" rel="noopener noreferrer">AWS Pricing Calculator</a>
+<a href="https://azure.microsoft.com/en-us/pricing/calculator/" target="_blank" rel="noopener noreferrer">Azure Pricing Calculator</a>
+<a href="https://cloud.google.com/products/calculator" target="_blank" rel="noopener noreferrer">Google Cloud Pricing Calculator</a>
+</div>
+<p class="note">Try loading one here. If the frame stays blank, the provider is blocking embedding, so open it in a new tab.</p>
+<div class="row" id="tabs" style="margin-top:6px"><button data-u="https://calculator.aws/#/addService">Load AWS here</button><button data-u="https://azure.microsoft.com/en-us/pricing/calculator/">Load Azure here</button><button data-u="https://cloud.google.com/products/calculator">Load Google Cloud here</button></div>
+<iframe id="fr" title="Official cloud pricing calculator" referrerpolicy="no-referrer"></iframe>
+</details>
+</section>
+</div>
+
+<aside class="stick">
+<section class="card" aria-live="polite">
+<h2>Estimate summary</h2>
+<p class="sub">Upfront cost: $0.00</p>
+<div id="sum"></div>
+<p class="note">Planning estimate only. Excludes taxes, support plans, free tiers and request-based charges. Confirm in the official calculators.</p>
+</section>
+</aside>
+</div>
+</div>
+
+<script>
+var CL=["AWS","Azure","Google Cloud"],COL=["#ec7211","#0972d3","#1a9c5b"];
+var S=[
+{id:"vm2",name:"Virtual machine, 2 vCPU / 8 GB",eq:["m6i.large","D2s v5","n2-standard-2"],unit:"instances",kind:"hr",disc:1,r:[0.096,0.096,0.097]},
+{id:"vm4",name:"Virtual machine, 4 vCPU / 16 GB",eq:["m6i.xlarge","D4s v5","n2-standard-4"],unit:"instances",kind:"hr",disc:1,r:[0.192,0.192,0.194]},
+{id:"db",name:"Managed PostgreSQL, 2 vCPU / 8 GB",eq:["RDS","Flexible Server","Cloud SQL"],unit:"instances",kind:"hr",disc:1,r:[0.178,0.125,0.139]},
+{id:"k8s",name:"Managed Kubernetes control plane",eq:["EKS","AKS (free tier)","GKE"],unit:"clusters",kind:"hr",disc:0,r:[0.10,0,0.10]},
+{id:"lb",name:"Load balancer (base hourly charge)",eq:["ALB","Standard LB","Cloud Load Balancing"],unit:"load balancers",kind:"hr",disc:0,r:[0.0225,0.025,0.025]},
+{id:"blk",name:"SSD block storage",eq:["EBS gp3","Standard SSD","pd-balanced"],unit:"GB",kind:"gb",disc:0,r:[0.08,0.075,0.10]},
+{id:"obj",name:"Object storage, standard tier",eq:["S3","Blob (hot)","Cloud Storage"],unit:"GB",kind:"gb",disc:0,r:[0.023,0.018,0.020]},
+{id:"egr",name:"Internet data transfer out",eq:["Data transfer","Bandwidth","Premium network"],unit:"GB per month",kind:"gb",disc:0,r:[0.09,0.087,0.12]},
+{id:"fn",name:"Serverless functions (512 MB, 200 ms)",eq:["Lambda","Functions","Cloud Run functions"],unit:"million invocations",kind:"gb",disc:0,r:[1.87,1.80,2.00]}
+];
+var CAT={
+"AWS":["Amazon EC2","AWS Lambda","Amazon ECS","Amazon EKS","AWS Fargate","Amazon Lightsail","AWS Elastic Beanstalk","AWS Batch","Amazon S3","Amazon EBS","Amazon EFS","Amazon FSx","Amazon S3 Glacier","AWS Storage Gateway","AWS Backup","Amazon RDS","Amazon Aurora","Amazon DynamoDB","Amazon ElastiCache","Amazon MemoryDB","Amazon Redshift","Amazon DocumentDB","Amazon Neptune","Amazon Keyspaces","Amazon Timestream","Amazon VPC","Amazon CloudFront","Amazon Route 53","Amazon API Gateway","AWS Direct Connect","AWS Global Accelerator","Elastic Load Balancing","AWS NAT Gateway","AWS Transit Gateway","AWS VPN","Amazon SQS","Amazon SNS","Amazon EventBridge","AWS Step Functions","Amazon MQ","Amazon Kinesis","Amazon MSK","AWS Glue","Amazon Athena","Amazon EMR","Amazon OpenSearch Service","Amazon QuickSight","AWS Lake Formation","Amazon SageMaker","Amazon Bedrock","Amazon Rekognition","Amazon Comprehend","Amazon Textract","Amazon Translate","Amazon Transcribe","Amazon Polly","Amazon Lex","Amazon CloudWatch","AWS CloudTrail","AWS Config","AWS Systems Manager","AWS CloudFormation","AWS KMS","AWS Secrets Manager","AWS WAF","AWS Shield","Amazon GuardDuty","Amazon Inspector","Amazon Cognito","AWS Certificate Manager","AWS CodeBuild","AWS CodePipeline","AWS Amplify","Amazon WorkSpaces","Amazon AppStream 2.0","Amazon Connect","Amazon SES","AWS IoT Core","AWS Snowball"],
+"Azure":["Virtual Machines","Virtual Machine Scale Sets","App Service","Azure Functions","Container Apps","Container Instances","Azure Kubernetes Service","Service Fabric","Azure Batch","Blob Storage","Managed Disks","Azure Files","Data Lake Storage","Azure Backup","Azure NetApp Files","Azure SQL Database","SQL Managed Instance","Database for PostgreSQL","Database for MySQL","Azure Cosmos DB","Cache for Redis","Synapse Analytics","Data Factory","Azure Databricks","HDInsight","Stream Analytics","Event Hubs","Event Grid","Service Bus","Logic Apps","API Management","Virtual Network","Azure Load Balancer","Application Gateway","Front Door","Azure CDN","Azure DNS","ExpressRoute","VPN Gateway","Azure Firewall","Azure Bastion","NAT Gateway","Azure OpenAI Service","Azure AI Search","Azure Machine Learning","Azure AI Vision","Azure AI Speech","Azure AI Language","Azure Translator","Azure Bot Service","Azure Monitor","Log Analytics","Application Insights","Key Vault","Defender for Cloud","Microsoft Sentinel","Microsoft Entra ID","Azure DevOps","Site Recovery","Azure Virtual Desktop","IoT Hub","Digital Twins","Communication Services"],
+"Google Cloud":["Compute Engine","Cloud Run","Cloud Run functions","Google Kubernetes Engine","App Engine","Cloud Batch","Cloud Storage","Persistent Disk","Filestore","Backup and DR","Cloud SQL","AlloyDB","Cloud Spanner","Firestore","Bigtable","Memorystore","BigQuery","Dataflow","Dataproc","Pub/Sub","Cloud Composer","Dataplex","Looker","Cloud Load Balancing","Cloud CDN","Cloud DNS","Cloud NAT","Cloud VPN","Cloud Interconnect","Cloud Armor","VPC networking","Vertex AI","Gemini API","Vision AI","Speech-to-Text","Text-to-Speech","Cloud Translation","Document AI","Natural Language AI","Cloud Monitoring","Cloud Logging","Cloud Trace","Secret Manager","Cloud KMS","Security Command Center","Cloud Build","Artifact Registry","Cloud Deploy","Firebase","Apigee","API Gateway","Workflows","Eventarc","Cloud Tasks","Cloud Scheduler","Cloud Workstations"]
+};
+var CK=["AWS","Azure","Google Cloud"];
+var rates={},lines=[],uid=0;
+function resetRates(){S.forEach(function(s){rates[s.id]=s.r.slice()})}resetRates();
+function $(id){return document.getElementById(id)}
+function byId(id){return S.filter(function(s){return s.id===id})[0]}
+function num(v){v=parseFloat(v);return isFinite(v)&&v>=0?v:0}
+function esc(t){return String(t).replace(/[&<>"']/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]})}
+var f0=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",maximumFractionDigits:0});
+var f2=new Intl.NumberFormat("en-US",{style:"currency",currency:"USD",minimumFractionDigits:2,maximumFractionDigits:2});
+function p4(v){return "$"+v.toFixed(4).replace(/0+$/,"").replace(/\.$/,".00")}
+
+function calc(l,c){
+var f=1+parseFloat($("reg").value||0)/100;
+if(l.custom){
+if(c!==l.cloud)return{cost:0,na:true,text:""};
+var hr=l.basis==="hr",u=hr?l.qty*l.hrs:l.qty,cost=u*l.price*f;
+var t=l.qty+" units"+(hr?" × "+l.hrs+" h":"")+" × "+p4(l.price)+(hr?"/h":"/month");
+if(f!==1)t+=" × "+f.toFixed(2)+" region";
+return{cost:cost,text:t+" = "+f2.format(cost)};
+}
+var s=byId(l.svc),d=s.disc?1-num($("disc").value)/100:1,r=rates[s.id][c];
+var u2=s.kind==="hr"?l.qty*l.hrs:l.qty,cost2=u2*r*f*d;
+var t2=l.qty+" "+s.unit+(s.kind==="hr"?" × "+l.hrs+" h":"")+" × "+p4(r)+(s.kind==="hr"?"/h":"");
+if(f!==1)t2+=" × "+f.toFixed(2)+" region";
+if(d!==1)t2+=" × "+d.toFixed(2)+" discount";
+return{cost:cost2,text:t2+" = "+f2.format(cost2)};
+}
+
+function drawForm(){
+var v=$("fs").value,cu=v.indexOf("x:")===0;
+Array.prototype.forEach.call(document.querySelectorAll(".cu"),function(e){e.hidden=!cu});
+if(cu){
+$("eq").textContent="Single-cloud service. Enter its unit price from the provider’s pricing page.";
+$("fu").textContent="Unit: as billed";
+$("fh").disabled=$("cb").value!=="hr";
+}else{
+var s=byId(v);
+$("eq").textContent="Equivalent services: "+s.eq.join(" / ");
+$("fu").textContent="Unit: "+s.unit;
+$("fh").disabled=s.kind!=="hr";
+}
+}
+
+function render(){
+var tot=[0,0,0],rows="";
+lines.forEach(function(l){
+var nm=l.custom?l.name:byId(l.svc).name,r=[0,1,2].map(function(c){return calc(l,c)});
+var m=Math.min.apply(null,r.map(function(x){return x.cost})),diff=!l.custom&&r.some(function(x){return x.cost!==m});
+r.forEach(function(x,i){tot[i]+=x.cost});
+rows+="<tr><td>"+esc(l.desc||nm)+"<small>"+esc(l.custom?CK[l.cloud]+" service":nm)+"</small></td>"+r.map(function(x){return'<td class="'+(diff&&x.cost===m?"min":"")+'">'+(x.na?"—":f2.format(x.cost))+"</td>"}).join("")+
+'<td style="white-space:nowrap"><button class="lnk" data-a="calc" data-id="'+l.id+'" aria-expanded="'+(l.open?"true":"false")+'">'+(l.open?"Hide":"Show")+' calculation</button><button class="lnk" data-a="del" data-id="'+l.id+'" aria-label="Remove">Remove</button></td></tr>';
+if(l.open)rows+='<tr class="calc"><td colspan="5">'+r.map(function(x,i){return x.na?"":"<p><b>"+CL[i]+":</b> <code>"+esc(x.text)+"</code></p>"}).join("")+"</td></tr>";
+});
+$("cmp").innerHTML=lines.length?"<thead><tr><th>Service</th>"+CL.map(function(n){return"<th>"+n+"</th>"}).join("")+"<th></th></tr></thead><tbody>"+rows+"</tbody><tfoot><tr><td>Total monthly cost</td>"+tot.map(function(v){return"<td>"+f2.format(v)+"</td>"}).join("")+"<td></td></tr></tfoot>":'<tbody><tr><td class="empty">No services yet. Add a service to start your estimate.</td></tr></tbody>';
+var mn=Math.min.apply(null,tot),h="";
+tot.forEach(function(v,i){
+var tag=lines.length&&tot.some(function(x){return x!==mn})?(v===mn?'<span class="tag">Lowest</span>':(mn>0?'<span class="tag">+'+Math.round((v/mn-1)*100)+"%</span>":"")):"";
+h+='<div class="sum" style="border-color:'+COL[i]+'"><b>'+CL[i]+tag+"</b><strong>"+f2.format(v)+"</strong><span>per month, "+f0.format(v*12)+" per year</span></div>";
+});
+$("sum").innerHTML=h;
+}
+
+function drawRates(){
+var h="<thead><tr><th>Service</th>"+CL.map(function(n){return"<th>"+n+"</th>"}).join("")+"</tr></thead><tbody>";
+S.forEach(function(s){
+h+="<tr><td>"+s.name+"<small>"+(s.kind==="hr"?"per hour":s.id==="fn"?"per million invocations":s.id==="egr"?"per GB transferred":"per GB-month")+"</small></td>"+
+rates[s.id].map(function(v,i){return'<td><input type="number" min="0" step="any" value="'+v+'" data-r="'+s.id+":"+i+'" aria-label="'+s.name+" on "+CL[i]+'"></td>'}).join("")+"</tr>";
+});
+$("rt").innerHTML=h+"</tbody>";
+}
+
+function addLine(svc,qty,hrs,desc){lines.push({id:++uid,svc:svc,qty:qty,hrs:hrs||730,desc:desc||"",open:false})}
+function load(p){lines=[];p.forEach(function(x){addLine(x[0],x[1])});render()}
+var P1=[["vm2",3],["lb",1],["db",1],["blk",500],["obj",1000],["egr",500]];
+var P2=[["k8s",1],["vm4",6],["lb",2],["db",2],["blk",2000],["obj",5000],["egr",2000],["fn",20]];
+
+$("fs").innerHTML='<optgroup label="Compare across all clouds (priced)">'+S.map(function(s){return'<option value="'+s.id+'">'+s.name+"</option>"}).join("")+"</optgroup>"+
+CK.map(function(k,i){return'<optgroup label="'+k+' services">'+CAT[k].map(function(n){return'<option value="x:'+i+':'+esc(n)+'">'+esc(n)+"</option>"}).join("")+"</optgroup>"}).join("");
+$("cb").onchange=drawForm;
+$("fs").onchange=drawForm;
+$("add").onclick=function(){
+var v=$("fs").value;
+if(v.indexOf("x:")===0){
+var p=v.split(":"),hr=$("cb").value==="hr";
+lines.push({id:++uid,custom:true,cloud:+p[1],name:p.slice(2).join(":"),qty:num($("fq").value),hrs:hr?num($("fh").value):730,price:num($("cp").value),basis:$("cb").value,desc:$("fd").value.trim(),open:false});
+}else addLine(v,num($("fq").value),num($("fh").value),$("fd").value.trim());
+$("fd").value="";render();
+};
+$("p1").onclick=function(){load(P1)};$("p2").onclick=function(){load(P2)};
+$("reg").oninput=render;$("disc").oninput=render;
+$("cmp").addEventListener("click",function(e){
+var a=e.target.dataset.a,id=e.target.dataset.id;if(!a)return;
+if(a==="del")lines=lines.filter(function(x){return x.id!=id});
+else lines.forEach(function(x){if(x.id==id)x.open=!x.open});
+render();
+});
+$("rt").addEventListener("input",function(e){var r=e.target.dataset.r;if(!r)return;var p=r.split(":");rates[p[0]][+p[1]]=num(e.target.value);render()});
+$("reset").onclick=function(){resetRates();drawRates();render()};
+var IDX={aws:0,azure:1,gcp:2};
+$("live").onclick=function(){
+var st=$("lstat");st.textContent="Fetching live prices, this can take up to a minute…";
+fetch("/api/prices?region="+$("lreg").value).then(function(r){if(!r.ok)throw new Error("HTTP "+r.status);return r.json()}).then(function(d){
+var n=0,miss=[];
+Object.keys(d.prices).forEach(function(c){Object.keys(d.prices[c]).forEach(function(id){if(rates[id]){rates[id][IDX[c]]=d.prices[c][id];n++}})});
+Object.keys(d.errors).forEach(function(c){Object.keys(d.errors[c]).forEach(function(id){miss.push(c+":"+id)})});
+drawRates();render();
+st.textContent="Updated "+n+" prices ("+d.fetchedAt+"). Kept defaults for: "+(miss.join(", ")||"none")+". Check the unit prices table before relying on them.";
+}).catch(function(e){st.textContent="Could not reach the backend ("+e.message+"). Start server.py and open the page from its address."});
+};
+$("tabs").addEventListener("click",function(e){var u=e.target.dataset.u;if(u)$("fr").src=u});
+drawForm();drawRates();load(P1);
+</script>
+</body>
+</html>
