@@ -1,14 +1,73 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Area, AreaChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
-import { ArrowRight, ArrowUp, Check, ChevronRight, CircleHelp, Download, LockKeyhole, Play, Scale, Shield, Sparkles, Square, ThumbsDown, ThumbsUp, TrainFront } from 'lucide-react';
-import { architectureLayers, cloudServices, frameworks, lifecycle, phases, ragStages, securityControls, slides, useCases } from '../data/strategy.js';
-import { discoveryTestCases } from '../data/discoveryTestData.js';
+import { ArrowRight, ArrowUp, Check, ChevronRight, CircleHelp, ClipboardCheck, CreditCard, Download, Play, Scale, Shield, ShieldCheck, Sparkles, Square, ThumbsDown, ThumbsUp, TrainFront, X } from 'lucide-react';
+import { architectureLayers, cloudArchitectureProviders, cloudServices, frameworks, lifecycle, openSourceSecurityTools, phases, ragStages, securityCapabilities, securityControls, securityProviderEvaluation, slides, useCases } from '../data/strategy.js';
 import { ragDemoKnowledge, ragPlaybookSections, ragPlaybookStages, ragStageGuidance, ragStagePlaybooks } from '../data/ragPlaybook.js';
 import { Card, Metric, Pill, Range, SectionHeading } from './UI.jsx';
 
 const chartTip = { background: '#101c2c', border: '1px solid #26384e', borderRadius: 10, color: '#eaf2ff' };
-const discoveryPrompts=['Business objective','Process bottleneck','Manual effort / cost','Customer impact','Data sources & quality','Applications / integration','Regulatory constraints','Success KPI'];
+const publicAssetsBase=import.meta.env.BASE_URL.endsWith('/')?import.meta.env.BASE_URL:`${import.meta.env.BASE_URL}/`;
+const discoveryCategories=[
+  {id:'hybrid',name:'Orchestrated hybrid decision',description:'rules, AI reasoning and an agent working under human approval'},
+  {id:'rules-ai',name:'Rules + AI hybrid decision',description:'rules plus scoring or reasoning, no agent needed'},
+  {id:'automation',name:'Deterministic automation',description:'policy logic in code; AI is not needed for the decision'},
+  {id:'scoring',name:'Scored decision support',description:'a predictive model scores cases and people decide'},
+  {id:'knowledge',name:'Knowledge reasoning assistant',description:'retrieval and reasoning over documents'},
+  {id:'investigation',name:'Agentic investigation',description:'multi-step investigation with read-only tools'}
+];
+const discoveryScenarios=[
+  {id:'invoice',title:'Invoice exception handling',category:'hybrid',industry:'Finance / AP',mixSummary:'about 64% rules',baselineHours:1200,hourlyRate:40,mix:[['Price mismatch',31,'rules'],['Quantity / receipt mismatch',27,'rules'],['Missing or invalid PO',14,'reasoning'],['Tax / vendor master data',12,'reasoning'],['Disputes, multi-party cases',10,'agent'],['Duplicate suspicion',6,'rules']]},
+  {id:'loan',title:'Loan application approval',category:'hybrid',industry:'Banking / credit',mixSummary:'about 35% rules',baselineHours:900,hourlyRate:48,mix:[['Complete applications',35,'rules'],['Income verification',25,'rules'],['Policy exceptions',20,'reasoning'],['Document review',12,'reasoning'],['Complex cases',8,'agent']]},
+  {id:'insurance',title:'Insurance claims triage',category:'hybrid',industry:'Insurance',mixSummary:'about 35% rules',baselineHours:1100,hourlyRate:42,mix:[['Straight-through claims',35,'rules'],['Coverage checks',25,'rules'],['Document review',18,'reasoning'],['Damage assessment',12,'reasoning'],['Complex investigations',10,'agent']]},
+  {id:'kyc',title:'KYC adverse media review',category:'hybrid',industry:'Banking / compliance',mixSummary:'about 40% contextual reasoning',baselineHours:720,hourlyRate:52,mix:[['Clear matches',20,'rules'],['Entity resolution',20,'rules'],['Media relevance',25,'reasoning'],['Source comparison',20,'reasoning'],['Escalated investigations',15,'agent']]},
+  {id:'payment',title:'Payment dispute resolution',category:'hybrid',industry:'Payments',mixSummary:'about 30% rules',baselineHours:850,hourlyRate:38,mix:[['Duplicate / status checks',30,'rules'],['Reference matching',22,'rules'],['Bank correspondence',18,'reasoning'],['Policy exceptions',15,'reasoning'],['Multi-party disputes',15,'agent']]},
+  {id:'iso-repair',title:'ISO 20022 payment repair',category:'hybrid',industry:'Payments',mixSummary:'about 40% rules',baselineHours:680,hourlyRate:41,mix:[['Schema validation',40,'rules'],['Code mapping',24,'rules'],['Remittance context',18,'reasoning'],['Counterparty lookup',10,'reasoning'],['Repair investigation',8,'agent']]},
+  {id:'support',title:'Support ticket routing',category:'rules-ai',industry:'Customer service',mixSummary:'about 40% rules',baselineHours:1400,hourlyRate:32,mix:[['Known issue routing',40,'rules'],['Priority classification',25,'reasoning'],['Sentiment / urgency',20,'reasoning'],['Specialist escalation',15,'reasoning']]},
+  {id:'expense',title:'Expense policy compliance',category:'automation',industry:'Finance',mixSummary:'about 92% rules',baselineHours:520,hourlyRate:36,mix:[['Policy rule checks',62,'rules'],['Receipt field validation',30,'rules'],['Policy interpretation',8,'reasoning']]},
+  {id:'demand',title:'Store demand forecasting',category:'scoring',industry:'Retail / supply chain',mixSummary:'about 92% predictive scoring',baselineHours:640,hourlyRate:39,mix:[['Seasonal baseline',8,'rules'],['Demand prediction',72,'predictive'],['Promotion effects',20,'predictive']]},
+  {id:'policy-qa',title:'Policy and contract Q&A',category:'knowledge',industry:'Service operations',mixSummary:'about 85% contextual reasoning',baselineHours:460,hourlyRate:44,mix:[['Policy lookup',15,'reasoning'],['Contract interpretation',55,'reasoning'],['Cross-document questions',30,'reasoning']]},
+  {id:'cloud-incident',title:'Cloud incident root cause',category:'investigation',industry:'IT operations',mixSummary:'about 90% multi-step investigation',baselineHours:380,hourlyRate:58,mix:[['Alert correlation',10,'rules'],['Log investigation',45,'agent'],['Change history review',25,'reasoning'],['Dependency tracing',20,'agent']]}
+];
+const scenarioDiscoveryInputs={
+  invoice:{owner:'Accounts payable process owner',target:'Reduce invoice exception resolution time'},
+  loan:{owner:'Credit operations owner',target:'Improve application turnaround within credit policy'},
+  insurance:{owner:'Claims operations owner',target:'Reduce claim triage time with reviewer oversight'},
+  kyc:{owner:'Financial crime compliance owner',target:'Improve adverse media review quality and speed'},
+  payment:{owner:'Payment operations owner',target:'Resolve payment disputes faster with clear escalation'},
+  'iso-repair':{owner:'Payments product owner',target:'Reduce repair effort while preserving validation controls'},
+  support:{owner:'Customer service operations owner',target:'Route support requests accurately and quickly'},
+  expense:{owner:'Finance policy owner',target:'Reduce manual expense review while applying policy consistently'},
+  demand:{owner:'Retail planning owner',target:'Improve forecast accuracy for replenishment decisions'},
+  'policy-qa':{owner:'Knowledge management owner',target:'Answer policy questions from approved source documents'},
+  'cloud-incident':{owner:'Cloud operations owner',target:'Reduce incident investigation time without autonomous changes'}
+};
+const capabilityMixTypes={rules:'rules',context:'reasoning',predictive:'predictive',agent:'agent'};
+const getScenarioCapabilities=scenario=>Object.fromEntries(
+  Object.entries(capabilityMixTypes).map(([capability,type])=>[
+    capability,scenario.mix.reduce((total,row)=>total+(row[2]===type?row[1]:0),0)>=10
+  ])
+);
+const evidenceGroups=[
+  {name:'Business value',items:['Quantified baseline','Specific target outcome','Effort and cost known','Customer impact described']},
+  {name:'Workflow fit',items:['Repeatable steps','Clear decision criteria','Bounded scope','Stable process owner']},
+  {name:'Data readiness',items:['Digital and accessible','Quality measured','Consistent across sources','History for evaluation']},
+  {name:'Risk tolerance',items:['Read-only or draft access','Human approval on consequential actions','Audit and retention defined','Error threshold defined']}
+];
+const scenarioEvidenceCounts={invoice:[3,3,3,3],loan:[4,3,2,2],insurance:[3,3,3,3],kyc:[3,3,2,4],payment:[3,4,3,3],'iso-repair':[3,4,4,3],support:[3,3,4,3],expense:[4,4,4,3],demand:[4,3,3,2],'policy-qa':[3,3,4,3],'cloud-incident':[3,3,3,4]};
+const createEvidenceChecks=scenarioId=>Object.fromEntries(
+  evidenceGroups.flatMap((group,groupIndex)=>group.items.map((item,itemIndex)=>[
+    item,itemIndex<(scenarioEvidenceCounts[scenarioId]||scenarioEvidenceCounts.invoice)[groupIndex]
+  ]))
+);
+const discoveryTabs=['Scenario','Discovery','Decision mix','Capabilities','Evidence','Final Opportunity','Architecture','Value'];
+const architectureUseCaseExamples=[
+  {id:'compliance',title:'Compliance Analyst Workspace',summary:'Policy-driven case analysis with audit-ready decisions.',fileName:'compliance-analyst.png',icon:Scale,alt:'Compliance architecture: a supervisor coordinates rules, media, network and memo agents over read-only case data, with officer approval, audit trail and evaluation.'},
+  {id:'ap-supplier',title:'AP Team and Supplier Portal',summary:'Automate invoice handling and supplier queries.',fileName:'ap-team-supplier-portal.png',icon:ClipboardCheck,alt:'Accounts payable architecture: a supervisor coordinates match, context, dispute and case agents over read-only ERP and supplier data, with payment approval and audit controls.'},
+  {id:'payment-operations',title:'Payment Operations',summary:'Triage failed cross-border payments with controlled repair.',fileName:'payment-operations.png',icon:CreditCard,alt:'Payment operations architecture: validation, remittance, counterparty and repair agents use read-only payment data, with four-eyes approval and audit controls.'},
+  {id:'insurance-claims',title:'Insurance Claims',summary:'Coordinate claims evidence, coverage checks and human review.',fileName:'insurance-claims.png',icon:ShieldCheck,alt:'Insurance claims architecture: a supervisor coordinates matching, rules, documents, coverage, dispute and triage agents, with human approval and audit controls.'}
+];
 const decisionProsCons=[
   ['Automation','Handles complex multi-step processes','More difficult to control'],
   ['Productivity','Reduces manual investigation','Requires monitoring'],
@@ -18,6 +77,16 @@ const decisionProsCons=[
   ['Scalability','Can scale workflows with demand','Model throughput and token costs'],
   ['Customer experience','Faster contextual responses','Requires quality and safety controls'],
   ['Maintenance','Reusable agent capabilities','Model and prompt changes require regression testing']
+];
+const decisionDimensions=[
+  ['Logic','Predefined rules','Contextual reasoning'],
+  ['Input','Structured','Often unstructured'],
+  ['Output','Predictable','May vary'],
+  ['Decision','Rule-based','Reasoning-based'],
+  ['Execution','Fixed workflow','Dynamic workflow'],
+  ['Repeatability','High','Requires evaluation'],
+  ['Example','Tax calculation','Understanding a complex financial report'],
+  ['Best technology','Java, SQL, BPMN, rules engine','LLM, RAG, AI agent']
 ];
 const decisionNotRecommended=[
   'A fixed calculation can solve the problem.',
@@ -36,38 +105,6 @@ const decisionRecommended=[
   'The business value justifies the additional operational complexity.'
 ];
 
-function assessDiscoveryAnswers(answers) {
-  const allText=Object.values(answers).join(' ').toLowerCase();
-  const valueText=[answers[discoveryPrompts[0]],answers[discoveryPrompts[2]],answers[discoveryPrompts[7]]].join(' ').toLowerCase();
-  const workflowText=[answers[discoveryPrompts[1]],answers[discoveryPrompts[5]]].join(' ').toLowerCase();
-  const dataText=answers[discoveryPrompts[4]].toLowerCase();
-  const riskText=[answers[discoveryPrompts[5]],answers[discoveryPrompts[6]]].join(' ').toLowerCase();
-  const hasAny=(text,words)=>words.some(word=>text.includes(word));
-  const autonomousHighImpact=/(automatically approve|automatically reject|approve or reject all loan|autonomous.{0,30}(credit|loan|medical|legal)|final (credit|loan|medical|legal) decision)/i.test(allText);
-  const quantified=/[$%]|\b\d+(?:\.\d+)?\s*(hours?|days?|weeks?|months?|transactions?|cases?|staff|people)\b/i.test(valueText);
-  const measurableOutcome=/\b(reduce|decrease|increase|improve|cut|save|under|below|within)\b/i.test(valueText);
-  const boundedAction=hasAny(workflowText,['read-only','draft','bounded','staff review','human review','approval']);
-  const clearWorkflow=hasAny(workflowText,['manual','compare','repeat','routine','exception','bottleneck','steps']);
-  const poorData=hasAny(dataText,['incomplete','inconsistent','unavailable','untrusted','unknown','poor quality','difficult to access']);
-  const readyData=hasAny(dataText,['digital','available','trusted','complete','structured','validated','erp','quality']);
-  const humanControls=hasAny(riskText,['human','review','approval','audit','policy','read-only','draft']);
-  const criteria=[
-    {label:'Business value',score:quantified&&measurableOutcome?4:quantified?3:2,detail:quantified&&measurableOutcome?'A measurable outcome or baseline is captured.':'Add a quantified baseline and a specific target outcome.'},
-    {label:'Workflow fit',score:autonomousHighImpact?1:clearWorkflow&&boundedAction?4:clearWorkflow?3:2,detail:autonomousHighImpact?'The requested workflow includes autonomous high-impact decisions.':clearWorkflow&&boundedAction?'A recognizable workflow and bounded action are described.':'Clarify repeatable steps, action boundaries, and exception handling.'},
-    {label:'Data readiness',score:poorData?1:readyData?4:2,detail:poorData?'Data quality or access gaps need to be resolved first.':readyData?'Digital or accessible source data is identified.':'Confirm source ownership, access, quality, and freshness.'},
-    {label:'Risk tolerance',score:autonomousHighImpact?1:humanControls?4:2,detail:autonomousHighImpact?'High-impact outcomes need accountable human decision-making.':humanControls?'Human review, approval, or audit controls are identified.':'Define approval limits, accountable owners, and audit evidence.'}
-  ];
-  const score=criteria.reduce((sum,item)=>sum+item.score,0)/criteria.length;
-  const result=autonomousHighImpact
-    ?{status:'HUMAN DECISION REQUIRED',tone:'warning',recommendation:'Use AI to prepare evidence for a qualified reviewer—not to make the final decision.',note:'Establish decision criteria, data access, fairness checks, and accountable human review before expanding automation.'}
-    :score>=3.5
-      ?{status:'GOOD FIRST CANDIDATE',tone:'positive',recommendation:'Start with AI-assisted triage, deterministic validation, and human approval for consequential actions.',note:'Confirm the baseline and measure quality, cycle time, and exception rates in a controlled pilot.'}
-      :score<=2.25
-        ?{status:'NOT READY — ADDRESS GAPS',tone:'warning',recommendation:'Do not automate yet. Establish the process baseline, trusted data, and measurable success criteria first.',note:'Revisit the opportunity after the key discovery gaps have owners and remediation plans.'}
-        :{status:'CONDITIONAL CANDIDATE',tone:'conditional',recommendation:'Run a bounded discovery or proof of concept with explicit policy checks and human oversight.',note:'Resolve the weaker discovery dimensions before making production commitments.'};
-  return {...result,criteria,score:score.toFixed(1)};
-}
-
 function Vision({onNavigate}) {
   const [active, setActive] = useState(2);
   const stages = slides.slice(1);
@@ -84,122 +121,186 @@ function Vision({onNavigate}) {
     <section className="stage-journey" aria-label="17-stage strategy journey">
       <div className="stage-journey-heading"><span>17-STAGE STRATEGY JOURNEY</span><small>Select a stop to explore</small></div>
       <div className="stage-journey-scroll"><div className="stage-journey-track">
-        {stages.map((stage,index)=><button type="button" className="journey-stage" key={stage.eyebrow} style={{'--stage-delay':`${index*2}s`}} onClick={()=>onNavigate(index+1)} aria-label={`Open stage ${String(index+1).padStart(2,'0')}: ${stage.eyebrow.split('/').pop().trim()} — ${stage.title}`} title={stage.title}>
+        {stages.map((stage,index)=>{const label=index===9?'RELEASE':index===14?'ROADMAP':stage.eyebrow.split('/').pop().trim();return <button type="button" className="journey-stage" key={stage.eyebrow} style={{'--stage-delay':`${index*2}s`}} onClick={()=>onNavigate(index+1)} aria-label={`Open stage ${String(index+1).padStart(2,'0')}: ${label} — ${stage.title}`} title={stage.title}>
           <span className="journey-stage-node">{String(index+1).padStart(2,'0')}</span>
-          <span className="journey-stage-name">{stage.eyebrow.split('/').pop().trim()}</span>
-        </button>)}
+          <span className="journey-stage-name">{label}</span>
+        </button>;})}
         <span className="journey-train" aria-hidden="true"><TrainFront size={17}/></span>
       </div></div>
     </section>
   </div>;
 }
 
-function Discovery({demoRunToken,demoStopToken,onDemoComplete}) {
-  const prompts=discoveryPrompts;
-  const [answers,setAnswers]=useState({});
-  const [assessment,setAssessment]=useState(null);
-  const [activeLens,setActiveLens]=useState(0);
-  const [formError,setFormError]=useState('');
-  const [isDemoRunning,setIsDemoRunning]=useState(false);
-  const changeAnswer=(prompt,value)=>{
-    setAnswers(current=>({...current,[prompt]:value}));
-    setAssessment(null);
-    setFormError('');
-    setIsDemoRunning(false);
-  };
+function Discovery({demoRunToken=0,demoStopToken=0,onDemoComplete}) {
+  const [scenarioId,setScenarioId]=useState('invoice');
+  const [activeTab,setActiveTab]=useState(0);
+  const [showCategories,setShowCategories]=useState(false);
+  const [hours,setHours]=useState(1200);
+  const [hourlyRate,setHourlyRate]=useState(40);
+  const [effortReduction,setEffortReduction]=useState(40);
+  const [decisionOwner,setDecisionOwner]=useState(scenarioDiscoveryInputs.invoice.owner);
+  const [targetOutcome,setTargetOutcome]=useState(scenarioDiscoveryInputs.invoice.target);
+  const [capabilities,setCapabilities]=useState(()=>getScenarioCapabilities(discoveryScenarios[0]));
+  const [evidenceChecks,setEvidenceChecks]=useState(()=>createEvidenceChecks('invoice'));
   useEffect(()=>{
-    if(demoRunToken<=demoStopToken){
-      setIsDemoRunning(false);
-      return undefined;
-    }
-    const positive=discoveryTestCases.find(testCase=>testCase.id==='positive');
-    const negative=discoveryTestCases.find(testCase=>testCase.id==='negative');
-    if(!positive||!negative)throw new Error('Discovery demo requires positive and negative cases from testdata.md.');
-    const cases=[positive,negative];
-    const incompleteCase=cases.find(testCase=>prompts.some(prompt=>!testCase.answers[prompt]?.trim()));
-    if(incompleteCase){
-      const missing=prompts.find(prompt=>!incompleteCase.answers[prompt]?.trim());
-      setFormError(`The ${incompleteCase.id} test data is missing: ${missing}.`);
-      setIsDemoRunning(false);
-      onDemoComplete();
-      return undefined;
-    }
-    setIsDemoRunning(true);
-    let timer;
-    let currentInput;
-    let cancelled=false;
-    let caseIndex=0;
-    const runCase=()=>{
-      if(cancelled)return;
-      const testCase=cases[caseIndex];
-      setAnswers({});
-      setAssessment(null);
-      setActiveLens(0);
-      setFormError('');
-      let fieldIndex=0;
-      const visitField=()=>{
-        if(cancelled)return;
-        if(fieldIndex>=prompts.length){
-          setAssessment(assessDiscoveryAnswers(testCase.answers));
-          setActiveLens(0);
-          timer=window.setTimeout(()=>{
-            if(caseIndex+1<cases.length){
-              caseIndex+=1;
-              runCase();
-            }else{
-              setIsDemoRunning(false);
-              onDemoComplete();
-            }
-          },850);
-          return;
-        }
-        const prompt=prompts[fieldIndex];
-        setAnswers(current=>({...current,[prompt]:testCase.answers[prompt]}));
-        setActiveLens(Math.min(3,Math.floor(fieldIndex/2)));
-        currentInput=document.getElementById(`discovery-${fieldIndex}`);
-        currentInput?.classList.add('guided-play-target');
-        currentInput?.scrollIntoView({
-          behavior:window.matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',
-          block:'center',
-          inline:'nearest'
-        });
-        timer=window.setTimeout(()=>{
-          currentInput?.classList.remove('guided-play-target');
-          currentInput=null;
-          fieldIndex+=1;
-          visitField();
-        },650);
-      };
-      visitField();
-    };
-    runCase();
-    return ()=>{
-      cancelled=true;
-      window.clearTimeout(timer);
-      currentInput?.classList.remove('guided-play-target');
-    };
+    if(demoRunToken<=demoStopToken)return undefined;
+    let position=0;
+    const timer=window.setInterval(()=>{
+      if(position>=discoveryTabs.length*2){
+        window.clearInterval(timer);
+        onDemoComplete?.();
+        return;
+      }
+      if(position===0||position===discoveryTabs.length){
+        const demoScenario=position===0?discoveryScenarios[0]:discoveryScenarios[10];
+        setScenarioId(demoScenario.id);
+        setHours(demoScenario.baselineHours);
+        setHourlyRate(demoScenario.hourlyRate);
+        setDecisionOwner(scenarioDiscoveryInputs[demoScenario.id].owner);
+        setTargetOutcome(scenarioDiscoveryInputs[demoScenario.id].target);
+        setCapabilities(getScenarioCapabilities(demoScenario));
+        setEvidenceChecks(createEvidenceChecks(demoScenario.id));
+      }
+      setActiveTab(position%discoveryTabs.length);
+      position+=1;
+    },850);
+    return ()=>window.clearInterval(timer);
   },[demoRunToken,demoStopToken,onDemoComplete]);
-  const analyzeOpportunity=e=>{
-    e.preventDefault();
-    const missing=prompts.find(prompt=>!answers[prompt]?.trim());
-    if(missing){
-      setFormError(`Please complete all 8 fields. Missing: ${missing}.`);
-      document.getElementById(`discovery-${prompts.indexOf(missing)}`)?.focus();
-      return;
-    }
-    setAssessment(assessDiscoveryAnswers(answers));
-    setActiveLens(0);
-    setFormError('');
-    setIsDemoRunning(false);
+  const scenario=discoveryScenarios.find(item=>item.id===scenarioId)||discoveryScenarios[0];
+  const selectScenario=nextScenario=>{
+    setScenarioId(nextScenario.id);
+    setHours(nextScenario.baselineHours);
+    setHourlyRate(nextScenario.hourlyRate);
+    setDecisionOwner(scenarioDiscoveryInputs[nextScenario.id].owner);
+    setTargetOutcome(scenarioDiscoveryInputs[nextScenario.id].target);
+    setCapabilities(getScenarioCapabilities(nextScenario));
+    setEvidenceChecks(createEvidenceChecks(nextScenario.id));
   };
-  return <div className="content-grid">
-    <Card className="discovery-form"><form onSubmit={analyzeOpportunity} noValidate><div className="card-title-row"><div><Pill>WORKSHOP CANVAS</Pill><h3>Opportunity discovery</h3></div><span className="counter">{Object.values(answers).filter(value=>value.trim()).length}/{prompts.length} captured</span></div>
-      <div className="form-grid">{prompts.map((p,i)=><label className="text-field" key={p}><span><i>{String(i+1).padStart(2,'0')}</i>{p}</span><input id={`discovery-${i}`} value={answers[p]||''} onChange={e=>changeAnswer(p,e.target.value)} placeholder={['What outcome matters?','Where does work stall?','Hours or cost per month?','What is the customer pain?','Which sources are trusted?','What must the solution connect to?','What rules constrain this?','How will success be measured?'][i]} aria-required="true" disabled={isDemoRunning}/></label>)}</div>
-      <div className="discovery-actions"><button className="analyze-button" type="submit" disabled={isDemoRunning}><Sparkles size={14}/>{assessment?'Update assessment':'Analyze opportunity'}</button><span>Complete all 8 fields to generate the workshop readout.</span></div>
-      {formError&&<p className="form-error" role="alert">{formError}</p>}
-      {assessment&&!formError&&<p className="assessment-note" role="status">Assessment updated from the submitted answers. Change a field and submit again to refresh.</p>}
-    </form></Card>
-    <div className="side-stack"><Card className="accent-card"><Pill tone="violet">DISCOVERY LENS</Pill><h3>{assessment?'Assessment signals':'Value lives at the intersection'}</h3><div className="lens-list">{(assessment?.criteria||['Business value','Workflow fit','Data readiness','Risk tolerance'].map(label=>({label}))).map((item,i)=><button type="button" className={`lens-row ${assessment&&activeLens===i?'active':''}`} key={item.label} onClick={()=>assessment&&setActiveLens(i)} disabled={!assessment}><span className="lens-dot">{i+1}</span><span>{item.label}</span>{assessment&&<b className={`lens-score ${item.score<=2?'low':''}`}>{item.score}/5</b>}<ChevronRight size={15}/></button>)}</div>{assessment?<div className="lens-detail" aria-live="polite"><b>{assessment.criteria[activeLens].label} · {assessment.criteria[activeLens].score}/5</b><p>{assessment.criteria[activeLens].detail}</p></div>:<p className="muted small">Submit the workshop canvas to see a signal for each dimension.</p>}</Card><Card className={`candidate-card ${assessment?assessment.tone:''}`}><div className="micro-label">{assessment?.status||'WORKSHOP GUIDANCE'}{assessment&&<span className="candidate-score">SIGNAL {assessment.score}/5</span>}</div><p className="quote">{assessment?.recommendation||'High volume, measurable outcomes, digital evidence, bounded actions—and a human owner.'}</p>{assessment&&<p className="candidate-note">{assessment.note}</p>}<Pill>{assessment?'RULE-BASED WORKSHOP HEURISTIC':'NOT: “Use an agent”'}</Pill></Card></div>
+  const checkedFor=group=>group.items.filter(item=>evidenceChecks[item]).length;
+  const evidenceScores=evidenceGroups.map(group=>1+checkedFor(group));
+  const overallSignal=evidenceScores.reduce((total,score)=>total+score,0)/evidenceScores.length;
+  const evidenceTotal=evidenceGroups.reduce((total,group)=>total+checkedFor(group),0);
+  const businessScore=evidenceScores[0];
+  const dataScore=evidenceScores[2];
+  const riskScore=evidenceScores[3];
+  const rules=[
+    {id:'R1',fired:overallSignal>=3.5,text:'Signal average at or above 3.5 qualifies as a good first candidate'},
+    {id:'R2',fired:riskScore<=2,text:'Risk tolerance 2 or below caps the outcome at human decision required'},
+    {id:'R3',fired:capabilities.predictive&&dataScore<=2,text:'Predictive scoring with data readiness 2 or below: defer the model until data is labelled'},
+    {id:'R4',fired:capabilities.agent&&riskScore<=3,text:'Agent with risk tolerance 3 or below: read-only tools and draft output only'},
+    {id:'R5',fired:businessScore<=2,text:'Business value 2 or below: capture a quantified baseline before any build'}
+  ];
+  const candidateReady=overallSignal>=3.5&&riskScore>2;
+  const monthlySavings=Math.round(hours*effortReduction/100*hourlyRate);
+  const mixColors={rules:'#426b50',reasoning:'#9b72cf',agent:'#dc963a',predictive:'#4b9eb1'};
+  let chartPosition=0;
+  const chartStops=scenario.mix.map(([,share,type])=>{
+    const start=chartPosition;
+    chartPosition+=share;
+    return `${mixColors[type]} ${start}% ${chartPosition}%`;
+  }).join(', ');
+  const capabilityRows=[
+    {id:'rules',name:'Deterministic rules and policy',result:'Policy and rules engine (code, not an LLM)'},
+    {id:'context',name:'Contextual document / knowledge reasoning',result:'Document extraction and retrieval over policies, contracts and emails'},
+    {id:'agent',name:'Multi-step investigation / orchestration',result:'Agent with read-only tools that drafts the case for review'},
+    {id:'approval',name:'Consequential action',result:'Human approval gate and audit log',enabled:evidenceChecks['Human approval on consequential actions']}
+  ];
+  const toggleEvidence=item=>setEvidenceChecks(current=>({...current,[item]:!current[item]}));
+  const toggleCapability=id=>setCapabilities(current=>({...current,[id]:!current[id]}));
+  const formatCurrency=value=>`$${Math.round(value).toLocaleString('en-US')}`;
+  const renderStep=()=>{
+    if(activeTab===0)return <div className="discovery-scenario-grid">{discoveryScenarios.map(item=>{
+      const category=discoveryCategories.find(entry=>entry.id===item.category);
+      return <button type="button" key={item.id} className={`discovery-scenario ${scenarioId===item.id?'selected':''}`} aria-pressed={scenarioId===item.id} onClick={()=>selectScenario(item)}>
+        <small>{category.name}</small><strong>{item.title}</strong><span>{item.industry}</span>
+      </button>;
+    })}</div>;
+    if(activeTab===1)return <div className="discovery-input-grid">
+      <label>Manual effort baseline (hours / month)<input type="number" min="0" value={hours} onChange={event=>setHours(Math.max(0,Number(event.target.value)||0))}/><small>Use a measured baseline or a clearly labelled estimate.</small></label>
+      <label>Fully loaded hourly cost<input type="number" min="0" value={hourlyRate} onChange={event=>setHourlyRate(Math.max(0,Number(event.target.value)||0))}/><small>Include operational costs relevant to this workflow.</small></label>
+      <label>Decision owner<input type="text" value={decisionOwner} onChange={event=>setDecisionOwner(event.target.value)}/><small>Name the person accountable for policy and outcomes.</small></label>
+      <label>Target outcome<input type="text" value={targetOutcome} onChange={event=>setTargetOutcome(event.target.value)}/><small>Describe the customer- or business-facing improvement.</small></label>
+      <div className="discovery-input-note"><b>Selected scenario</b><span>{scenario.title} · {scenario.industry}</span><small>Illustrative inputs only. Validate them with the customer before estimating benefits.</small></div>
+    </div>;
+    if(activeTab===2)return <div className="discovery-mix-layout">
+      <div className="discovery-pie" role="img" aria-label={`Case mix distribution for ${scenario.title}`} style={{background:`conic-gradient(${chartStops})`}}/>
+      <div className="discovery-mix-list">{scenario.mix.map(([label,share,type])=><div className="discovery-mix-row" key={label}>
+        <i style={{'--mix-color':mixColors[type]}}/><span>{label}</span><b>{share}%</b><small>{type==='reasoning'?'Reasoning':type==='agent'?'Agent':type==='predictive'?'Predictive':'Rules'}</small>
+      </div>)}</div>
+    </div>;
+    if(activeTab===3)return <div className="discovery-capability-list">{[
+      {id:'rules',label:'Deterministic rules',description:'Apply fixed policy, thresholds, or validations in code.'},
+      {id:'context',label:'Contextual reasoning',description:'Interpret documents, unstructured evidence, or exceptions.'},
+      {id:'predictive',label:'Predictive scoring',description:'Estimate an outcome from historical labelled data.'},
+      {id:'agent',label:'Multi-step investigation',description:'Coordinate steps and tools when the next action depends on findings.'}
+    ].map(item=><button type="button" key={item.id} className={`discovery-capability ${capabilities[item.id]?'enabled':''}`} aria-pressed={Boolean(capabilities[item.id])} onClick={()=>toggleCapability(item.id)}>
+      <span className="discovery-capability-check">{capabilities[item.id]?'Yes':'No'}</span><span><b>{item.label}</b><small>{item.description}</small></span><i>{capabilities[item.id]?'In scope':'Out of scope'}</i>
+    </button>)}</div>;
+    if(activeTab===4)return <div className="discovery-evidence-grid">{evidenceGroups.map(group=><section className="discovery-evidence-group" key={group.name}>
+      <header><b>{group.name}</b><span>{1+checkedFor(group)} / 5</span></header>
+      {group.items.map(item=><label className={`discovery-evidence-item ${evidenceChecks[item]?'checked':''}`} key={item}>
+        <input type="checkbox" checked={Boolean(evidenceChecks[item])} onChange={()=>toggleEvidence(item)}/><span>{item}</span>
+      </label>)}
+    </section>)}</div>;
+    if(activeTab===5)return <div className="discovery-opportunity-result">
+      <div className={`discovery-candidate ${candidateReady?'ready':'capped'}`}>
+        <div className="discovery-candidate-meta"><b>{candidateReady?'GOOD FIRST CANDIDATE':riskScore<=2?'HUMAN DECISION REQUIRED':'NOT READY YET'}</b><span>SIGNAL {overallSignal.toFixed(1)} / 5</span></div>
+        <h4>{candidateReady?'Start with AI-assisted triage, deterministic validation, and human approval for consequential actions.':riskScore<=2?'Use AI to prepare evidence for a qualified human decision-maker.':'Strengthen the evidence and controls before committing to a build.'}</h4>
+        <p>{candidateReady?'Confirm the baseline and measure quality, cycle time, and exception rates in a controlled pilot.':'Address the risk and evidence gaps before expanding automation.'}</p>
+        <span>{discoveryCategories.find(item=>item.id===scenario.category)?.name}</span>
+      </div>
+      <h4 className="discovery-rules-heading">Rules evaluated</h4>
+      <div className="discovery-rule-list">{rules.map(rule=><div className={rule.fired?'fired':''} key={rule.id}><b>{rule.fired?'✓':'–'}</b><strong>{rule.id}</strong><span>{rule.text}</span></div>)}</div>
+      <p className="discovery-rule-note">{evidenceTotal} of 16 evidence checks passed. This transparent rule-based signal is guidance, not an automated decision.</p>
+    </div>;
+    if(activeTab===6)return <div className="discovery-architecture-list">{capabilityRows.filter(row=>row.id==='approval'?row.enabled:capabilities[row.id]).map(row=><div className="discovery-architecture-row" key={row.id}><b>{row.name}</b><span>→</span><p>{row.result}</p></div>)}</div>;
+    return <div className="discovery-value">
+      <label className="discovery-range"><span>Effort reduction <b>{effortReduction}%</b></span><input type="range" min="0" max="80" step="5" value={effortReduction} onChange={event=>setEffortReduction(Number(event.target.value))}/></label>
+      <div className="discovery-value-cards">
+        <div><span>Hours saved / month</span><b>{Math.round(hours*effortReduction/100).toLocaleString('en-US')}</b></div>
+        <div><span>Saving / month</span><b>{formatCurrency(monthlySavings)}</b></div>
+        <div><span>Saving / year</span><b>{formatCurrency(monthlySavings*12)}</b></div>
+        <div><span>Scenario</span><b>Base</b></div>
+      </div>
+      <p>Illustrative estimate only; validate baseline, rate, and reduction with the process owner.</p>
+    </div>;
+  };
+  return <div className="discovery-wizard">
+    <div className="discovery-wizard-heading"><a href="#discovery-categories" onClick={event=>{event.preventDefault();setShowCategories(true);}}>Decision categories ↗</a></div>
+    <nav className="discovery-tabs" aria-label="Discovery steps">
+      {discoveryTabs.map((tab,index)=><button type="button" key={tab} className={activeTab===index?'active':''} aria-current={activeTab===index?'step':undefined} onClick={()=>setActiveTab(index)}>{index+1} {tab}</button>)}
+    </nav>
+    <Card className="discovery-step-card">
+      <div className="discovery-step-heading"><span>{activeTab+1}</span><div><h3>{[
+        'Customer scenario','Discovery inputs','Decision mix','Capability fit','Evidence checklist','Final Opportunity: Decision Fit Index','Capability to architecture','Value range'
+      ][activeTab]}</h3><p>{[
+        'Scenarios are grouped by the decision pattern their case mix produces. Each dataset is illustrative and loads its own inputs, case mix and evidence.',
+        'Capture the current workload and decision ownership before estimating an opportunity.',
+        'Share of case volume by the capability each case needs. A capability turns Yes when it covers 10% or more.',
+        'Select the decision capabilities this workflow needs. Keep the solution no more complex than the work requires.',
+        'Four checks per signal. Score = 1 + checks passed (range 1 to 5). Tick only what the customer can show.',
+        `${scenario.title}: ${evidenceTotal} of 16 evidence checks passed, signal ${overallSignal.toFixed(1)} / 5. Rules fired: ${rules.filter(rule=>rule.fired).map(rule=>rule.id).join(', ')||'none'}. Scored by rules only; no model makes this call.`,
+        'Components follow the capabilities marked Yes.',
+        `Baseline ${hours.toLocaleString('en-US')} hrs/month at ${formatCurrency(hourlyRate)}/hr. Show a range, then agree the assumption.`
+      ][activeTab]}</p></div></div>
+      {renderStep()}
+    </Card>
+    <div className="discovery-wizard-footer">
+      <button type="button" onClick={()=>setActiveTab(index=>Math.max(0,index-1))} disabled={activeTab===0}><ChevronRight size={15}/> Back</button>
+      <span>{activeTab+1} / 8</span>
+      <button type="button" onClick={()=>setActiveTab(index=>Math.min(discoveryTabs.length-1,index+1))} disabled={activeTab===discoveryTabs.length-1}>Next <ArrowRight size={15}/></button>
+    </div>
+    {showCategories&&createPortal(<div className="discovery-modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget)setShowCategories(false);}}>
+      <section className="discovery-category-dialog" role="dialog" aria-modal="true" aria-labelledby="discovery-category-title" onKeyDown={event=>{if(event.key==='Escape')setShowCategories(false);}}>
+        <header><div><h2 id="discovery-category-title">Decision categories</h2><p>Each scenario falls into one category, set by the capability pattern in its case mix. Select a scenario to load it.</p></div><button type="button" aria-label="Close decision categories" onClick={()=>setShowCategories(false)}><X size={19}/></button></header>
+        <div className="discovery-category-table">
+          {discoveryCategories.map(category=><section key={category.id}>
+            <div className="discovery-category-name"><b>{category.name}</b><span>{category.description}</span></div>
+            <div className="discovery-category-scenarios">{discoveryScenarios.filter(item=>item.category===category.id).map(item=><button type="button" key={item.id} onClick={()=>{selectScenario(item);setShowCategories(false);setActiveTab(0);}}><u>{item.title}</u><small>{item.mixSummary}</small></button>)}</div>
+          </section>)}
+        </div>
+      </section>
+    </div>,document.body)}
   </div>;
 }
 
@@ -320,6 +421,12 @@ function Decision() {
     </Card>
     </div>
     <div className="decision-guidance">
+      <Card className="decision-guidance-card decision-dimensions-card" id="decision-dimensions">
+        <div className="card-title-row"><div><Pill>DIMENSIONS</Pill><h3>Deterministic vs non-deterministic: how do I decide?</h3></div><Scale size={18}/></div>
+        <p>This distinction is critical. Use deterministic processes when rules and outcomes are predefined; consider AI when work requires contextual reasoning over variable inputs.</p>
+        <div className="decision-pros-cons-wrap"><table className="decision-pros-cons-table decision-dimensions-table"><thead><tr><th>Dimension</th><th>Deterministic</th><th>Non-deterministic</th></tr></thead><tbody>{decisionDimensions.map(([dimension,deterministic,nonDeterministic])=><tr key={dimension}><th scope="row">{dimension}</th><td>{deterministic}</td><td>{nonDeterministic}</td></tr>)}</tbody></table></div>
+        <a className="decision-back-top" href="#decision-top"><ArrowUp size={14}/>Back to top</a>
+      </Card>
       <Card className="decision-guidance-card decision-justification" id="decision-pros-cons">
         <div className="card-title-row"><div><Pill>BUSINESS JUSTIFICATION</Pill><h3>Pros and cons of Agentic AI</h3></div><Scale size={18}/></div>
         <p>Before approving an agent, compare its benefits against the additional complexity and cost it introduces.</p>
@@ -345,19 +452,62 @@ function Decision() {
 function Architecture() {
   const [selected,setSelected]=useState(0);
   const [reviewed,setReviewed]=useState([]);
+  const [selectedExample,setSelectedExample]=useState(null);
+  const [previewError,setPreviewError]=useState(false);
+  const previousFocusRef=useRef(null);
   const item=architectureLayers[selected];
   const cubeGroups=[[0],[1,2],[3,4],[5,6,7],[8,9]];
   const activeCubeIndex=cubeGroups.findIndex(group=>group.includes(selected));
   const isReviewed=reviewed.includes(selected);
   const toggleReviewed=()=>setReviewed(current=>isReviewed?current.filter(index=>index!==selected):[...current,selected]);
-  return <div className="content-grid architecture-grid">
-    <div className="architecture-explorer">
-      <div className="architecture-guide"><Pill>INTERACTIVE WALKTHROUGH</Pill><span>{reviewed.length}/{architectureLayers.length} layers reviewed</span><p>Select a layer in the list or diagram to inspect its design notes and workshop prompt.</p></div>
-      <div className="layer-list">{architectureLayers.map((x,i)=><motion.button key={x.name} whileHover={{x:3}} aria-pressed={selected===i} className={`layer-row ${selected===i?'active':''} ${reviewed.includes(i)?'reviewed':''}`} onClick={()=>setSelected(i)}><span>{String(i+1).padStart(2,'0')}</span><b>{x.name}</b><small>{x.detail}</small>{reviewed.includes(i)?<Check size={14}/>:<ChevronRight size={15}/>}</motion.button>)}</div>
+  const openExample=example=>{
+    previousFocusRef.current=document.activeElement;
+    setPreviewError(false);
+    setSelectedExample(example);
+  };
+  const closeExample=()=>setSelectedExample(null);
+  useEffect(()=>{
+    if(selectedExample)return undefined;
+    previousFocusRef.current?.focus();
+    return undefined;
+  },[selectedExample]);
+  return <div className="architecture-stage">
+    <div className="content-grid architecture-grid">
+      <div className="architecture-explorer">
+        <div className="architecture-guide"><Pill>INTERACTIVE WALKTHROUGH</Pill><span>{reviewed.length}/{architectureLayers.length} layers reviewed</span><p>Select a layer in the list or diagram to inspect its design notes and workshop prompt.</p></div>
+        <div className="layer-list">{architectureLayers.map((x,i)=><motion.button key={x.name} whileHover={{x:3}} aria-pressed={selected===i} className={`layer-row ${selected===i?'active':''} ${reviewed.includes(i)?'reviewed':''}`} onClick={()=>setSelected(i)}><span>{String(i+1).padStart(2,'0')}</span><b>{x.name}</b><small>{x.detail}</small>{reviewed.includes(i)?<Check size={14}/>:<ChevronRight size={15}/>}</motion.button>)}</div>
+      </div>
+      <Card className="architecture-detail"><div className="architecture-art"><div className="architecture-glow"/><div className="stack-cube"><div className="cube-label">ENTERPRISE<br/>AGENTIC AI</div>{['EXPERIENCE','API + ORCHESTRATION','AGENTS + MODELS','DATA + TOOLS','TRUST PLANE'].map((label,i)=><button type="button" key={label} aria-label={`Inspect ${label.toLowerCase()} architecture layer`} className={`cube-layer cube-${i+1} ${activeCubeIndex===i?'active':''}`} onClick={()=>setSelected(cubeGroups[i][0])}>{label}</button>)}</div><div className="floating-node n1">◉ POLICY</div><div className="floating-node n2">⌁ TELEMETRY</div></div>
+        <AnimatePresence mode="wait"><motion.div className="layer-info" key={item.name} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-5}}><div className="layer-info-heading"><Pill>{String(selected+1).padStart(2,'0')} / 10 · LAYER</Pill><span>{reviewed.length} reviewed</span></div><h3>{item.name}</h3><p>{item.detail}</p><div className="info-columns"><div><span>TECHNOLOGY OPTIONS</span><b>{item.tech}</b></div><div><span>SECURITY REQUIREMENTS</span><b>{item.security}</b></div></div><div className="workshop-prompt"><span>WORKSHOP PROMPT</span><p>{item.prompt}</p></div><div className="layer-actions"><button type="button" className={isReviewed?'reviewed':''} onClick={toggleReviewed}>{isReviewed?<><Check size={13}/> Reviewed</>: 'Mark reviewed'}</button><button type="button" onClick={()=>setSelected((selected+1)%architectureLayers.length)}>Next layer <ArrowRight size={13}/></button></div></motion.div></AnimatePresence>
+      </Card>
     </div>
-    <Card className="architecture-detail"><div className="architecture-art"><div className="architecture-glow"/><div className="stack-cube"><div className="cube-label">ENTERPRISE<br/>AGENTIC AI</div>{['EXPERIENCE','API + ORCHESTRATION','AGENTS + MODELS','DATA + TOOLS','TRUST PLANE'].map((label,i)=><button type="button" key={label} aria-label={`Inspect ${label.toLowerCase()} architecture layer`} className={`cube-layer cube-${i+1} ${activeCubeIndex===i?'active':''}`} onClick={()=>setSelected(cubeGroups[i][0])}>{label}</button>)}</div><div className="floating-node n1">◉ POLICY</div><div className="floating-node n2">⌁ TELEMETRY</div></div>
-      <AnimatePresence mode="wait"><motion.div className="layer-info" key={item.name} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-5}}><div className="layer-info-heading"><Pill>{String(selected+1).padStart(2,'0')} / 10 · LAYER</Pill><span>{reviewed.length} reviewed</span></div><h3>{item.name}</h3><p>{item.detail}</p><div className="info-columns"><div><span>TECHNOLOGY OPTIONS</span><b>{item.tech}</b></div><div><span>SECURITY REQUIREMENTS</span><b>{item.security}</b></div></div><div className="workshop-prompt"><span>WORKSHOP PROMPT</span><p>{item.prompt}</p></div><div className="layer-actions"><button type="button" className={isReviewed?'reviewed':''} onClick={toggleReviewed}>{isReviewed?<><Check size={13}/> Reviewed</>:'Mark reviewed'}</button><button type="button" onClick={()=>setSelected((selected+1)%architectureLayers.length)}>Next layer <ArrowRight size={13}/></button></div></motion.div></AnimatePresence>
-    </Card>
+    <section className="architecture-use-cases" aria-labelledby="architecture-use-cases-title">
+      <div className="architecture-use-cases-heading"><div><Pill>USE CASE ARCHITECTURES</Pill><h3 id="architecture-use-cases-title">Explore multi-agent blueprints.</h3></div><p>Select an example to open its full architecture diagram.</p></div>
+      <div className="architecture-use-case-grid">{architectureUseCaseExamples.map(example=>{
+        const {id,title,summary,icon:Icon}=example;
+        return <button type="button" className="architecture-use-case-card" id={`architecture-example-${id}`} key={id} onClick={()=>openExample(example)} aria-label={`Open ${title} architecture diagram`}>
+          <span className="architecture-use-case-icon"><Icon size={19}/></span><span className="architecture-use-case-copy"><b>{title}</b><small>{summary}</small></span><ArrowRight size={15}/>
+        </button>;
+      })}</div>
+    </section>
+    {selectedExample&&createPortal(
+      <div className="architecture-preview-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget)closeExample();}}>
+        <section className="architecture-preview-dialog" role="dialog" aria-modal="true" aria-labelledby="architecture-preview-title" onKeyDown={event=>{
+          if(event.key==='Escape'){event.stopPropagation();closeExample();return;}
+          if(event.key==='Tab'){
+            const focusable=Array.from(event.currentTarget.querySelectorAll('button:not([disabled]), a[href], input:not([disabled]), [tabindex]:not([tabindex="-1"])'));
+            const first=focusable[0];
+            const last=focusable[focusable.length-1];
+            if(event.shiftKey&&document.activeElement===first){event.preventDefault();last?.focus();}
+            else if(!event.shiftKey&&document.activeElement===last){event.preventDefault();first?.focus();}
+          }
+        }}>
+          <div className="architecture-preview-header"><div><span className="micro-label">MULTI-AGENT ARCHITECTURE</span><h2 id="architecture-preview-title">{selectedExample.title}</h2></div><button type="button" className="icon-button" onClick={closeExample} aria-label="Close architecture preview" autoFocus><X size={18}/></button></div>
+          {previewError?<p className="architecture-preview-error" role="alert">This architecture diagram could not be loaded. Close the preview and try again.</p>:<img className="architecture-preview-image" src={`${publicAssetsBase}use-case-architectures/${selectedExample.fileName}`} alt={selectedExample.alt} onError={()=>setPreviewError(true)}/>}
+        </section>
+      </div>,
+      document.body
+    )}
   </div>;
 }
 
@@ -456,14 +606,61 @@ function Lifecycle() {
 }
 
 function Cloud() {
-  const [provider,setProvider]=useState('AWS');const [selected,setSelected]=useState(4);
+  const [provider,setProvider]=useState('AWS');const [selected,setSelected]=useState(4);const [activeView,setActiveView]=useState('Architecture view');
+  const providerDetails=cloudArchitectureProviders[provider];
+  const views=['Architecture view','Technology catalogue','Comparison','Best practices'];
   const narrative=['Edge entry and filtering','API boundary / rate limits','Private network isolation','Resilient traffic routing','Containerized agent services','Managed / hosted foundation models','Durable business and knowledge data','Permission-aware retrieval store','Asynchronous events and queues','Identity, keys and secrets','Metrics, logs, traces and alerting'];
-  return <div className="cloud-layout"><div className="cloud-controls"><Pill>REFERENCE MAPPING</Pill><div className="toggle-group">{Object.keys(cloudServices).map(x=><button className={provider===x?'active':''} onClick={()=>{setProvider(x);setSelected(4)}} key={x}>{x}</button>)}</div><p className="small muted">Illustrative service mapping—not a prescribed landing zone. Select a service to inspect.</p><div className="cloud-callout"><Shield size={17}/><span>Private-by-default paths<br/><b>identity · network · encryption</b></span></div><div className="cloud-callout"><LockKeyhole size={17}/><span>Production essentials<br/><b>recovery · audit · cost limits</b></span></div></div><div className="cloud-map"><div className="vpc-label"><span>{provider} · VPC / VNet / VPC NETWORK</span><span>PRIVATE SUBNETS</span></div><div className="service-grid">{cloudServices[provider].map((x,i)=><button key={x} className={`service-node ${selected===i?'active':''}`} onClick={()=>setSelected(i)}><i>{['◉','⌘','▦','⇄','▣','✧','◫','⌕','⇢','◇','⌁'][i]}</i><span>{x}</span></button>)}</div><div className="service-description"><Pill>{provider} REFERENCE</Pill><p><b>{cloudServices[provider][selected]}</b> — {narrative[selected]}. Apply availability zones, least privilege and service-specific recovery objectives as appropriate.</p></div></div></div>;
+  const benefits=[
+    ['High performance','Use edge caching and managed caches; validate latency against workload baselines.'],
+    ['Enterprise security','Combine identity, encryption, network controls, and auditable access policies.'],
+    ['Auto scaling','Scale managed services against measured demand and recovery objectives.'],
+    ['Cost optimization','Right-size resources and monitor cost by workload and environment.']
+  ];
+  const practices={
+    AWS:[
+      ['Network isolation','Place workloads in private subnets; expose only required endpoints and routes.'],
+      ['Identity first','Use IAM roles and short-lived credentials; scope permissions to each workload.'],
+      ['Resilience and recovery','Set multi-AZ targets, backups, restore tests, and service-specific recovery objectives.'],
+      ['Observability and cost','Correlate CloudWatch metrics, CloudTrail activity, traces, and tagged spend.']
+    ],
+    Azure:[
+      ['Network isolation','Use VNets and private endpoints; restrict ingress with explicit network policies.'],
+      ['Identity first','Prefer Entra workload identities and managed identities over stored credentials.'],
+      ['Resilience and recovery','Set zone-aware targets, backups, restore tests, and service-specific recovery objectives.'],
+      ['Observability and cost','Correlate Azure Monitor, Activity Logs, traces, and tagged spend.']
+    ],
+    GCP:[
+      ['Network isolation','Use VPC boundaries and private service access; restrict ingress with firewall policy.'],
+      ['Identity first','Use least-privilege IAM and Workload Identity; avoid long-lived service-account keys.'],
+      ['Resilience and recovery','Set regional or zonal targets, backups, restore tests, and service-specific recovery objectives.'],
+      ['Observability and cost','Correlate Cloud Logging, Cloud Monitoring, traces, and labeled spend.']
+    ]
+  };
+  return <div className="cloud-workbench">
+    <div className="cloud-workbench-heading"><div><Pill>CLOUD FOUNDATION</Pill><p>Choose a provider to explore its reference design.</p></div><div className="provider-tabs" role="tablist" aria-label="Cloud provider">{Object.keys(cloudArchitectureProviders).map(name=><button type="button" role="tab" aria-selected={provider===name} className={provider===name?'active':''} id={`cloud-provider-${name.toLowerCase()}`} aria-controls="cloud-view-panel" key={name} onClick={()=>{setProvider(name);setSelected(4);}}>{name}</button>)}</div></div>
+    <div className="workbench-tabs" role="tablist" aria-label="Cloud architecture views">{views.map(view=><button type="button" role="tab" aria-selected={activeView===view} className={activeView===view?'active':''} id={`cloud-view-${view.toLowerCase().replaceAll(' ','-')}`} aria-controls="cloud-view-panel" key={view} onClick={()=>setActiveView(view)}>{view}</button>)}</div>
+    <Card className="cloud-workbench-panel" role="tabpanel" id="cloud-view-panel" aria-labelledby={`cloud-view-${activeView.toLowerCase().replaceAll(' ','-')}`}>
+      {activeView==='Architecture view'&&<>
+        <div className="workbench-panel-heading"><div><Pill>REFERENCE ARCHITECTURE</Pill><h3>Enterprise reference architecture</h3><p>Secure, scalable building blocks on {provider}.</p></div><span className="availability-badge"><Check size={12}/> Highly available · Autoscaling</span></div>
+        <div className="cloud-layer-stack">{providerDetails.layers.map((layer,index)=><div className={`cloud-layer-row cloud-layer-${index+1}`} key={layer.name}><div className="cloud-layer-title"><span>{String(index+1).padStart(2,'0')}</span><div><b>{layer.name}</b><small>{layer.detail}</small></div></div><div className="cloud-layer-services">{layer.services.map(service=><span key={service}>{service}</span>)}</div></div>)}</div>
+        <div className="cloud-security-foundation"><ShieldCheck size={16}/><div><b>Security, governance and observability</b><small>{providerDetails.security}</small></div><span>FOUNDATION</span></div>
+        <div className="cloud-summary-grid">
+          <Card className="foundation-model-card"><Pill>MANAGED FOUNDATION MODELS</Pill><div className="foundation-model-name"><span><Sparkles size={18}/></span><div><b>{providerDetails.model}</b><small>{providerDetails.modelDetail}</small></div></div><div className="foundation-purpose"><b>Purpose</b><p>{providerDetails.purpose}</p></div><div className="foundation-details"><div><b>Typical integration</b>{providerDetails.integrations.map(item=><span key={item}><Check size={11}/>{item}</span>)}</div><div><b>Architecture considerations</b>{providerDetails.considerations.map(item=><span key={item}>{item}</span>)}</div></div><div className="foundation-alternatives"><b>Alternatives</b>{providerDetails.alternatives.map(item=><span key={item}>{item}</span>)}</div></Card>
+          <div className="cloud-benefits"><Pill>KEY BENEFITS</Pill><p>Design goals to validate against the workload baseline.</p><div>{benefits.map(([title,text])=><article key={title}><b>{title}</b><span>{text}</span></article>)}</div><small>Illustrative design guidance, not service-level guarantees. Validate requirements, regional availability, security, reliability, and cost for the workload.</small></div>
+        </div>
+      </>}
+      {activeView==='Technology catalogue'&&<div className="cloud-catalogue-view"><div className="workbench-panel-heading"><div><Pill>{provider} TECHNOLOGY CATALOGUE</Pill><h3>Choose services by architecture role.</h3><p>Select a service to inspect its place in the reference design.</p></div></div><div className="cloud-catalogue-grid">{cloudServices[provider].map((service,index)=><button type="button" className={`cloud-catalogue-item ${selected===index?'active':''}`} key={service} onClick={()=>setSelected(index)}><span>{String(index+1).padStart(2,'0')}</span><div><small>{narrative[index]}</small><b>{service}</b></div><ChevronRight size={14}/></button>)}</div><div className="catalogue-detail"><Pill>{provider} REFERENCE</Pill><p><b>{cloudServices[provider][selected]}</b> — {narrative[selected]}. Validate availability, access controls, regional support, and operational ownership before selection.</p></div></div>}
+      {activeView==='Comparison'&&<div className="cloud-comparison-view"><div className="workbench-panel-heading"><div><Pill>PROVIDER COMPARISON</Pill><h3>Compare equivalent architecture capabilities.</h3><p>Service names are illustrative; confirm fit, scope, region, and pricing with each provider.</p></div></div><div className="cloud-comparison-scroll"><table className="cloud-comparison-table"><thead><tr><th>Architecture capability</th>{Object.keys(cloudArchitectureProviders).map(name=><th className={provider===name?'selected-provider':''} key={name}>{name}</th>)}</tr></thead><tbody>{cloudArchitectureProviders.AWS.layers.map((layer,index)=><tr key={layer.name}><th>{layer.name}</th>{Object.keys(cloudArchitectureProviders).map(name=><td className={provider===name?'selected-provider':''} key={name}>{cloudArchitectureProviders[name].layers[index].services.join(' · ')}</td>)}</tr>)}<tr><th>Managed foundation models</th>{Object.keys(cloudArchitectureProviders).map(name=><td className={provider===name?'selected-provider':''} key={name}>{cloudArchitectureProviders[name].model}</td>)}</tr></tbody></table></div></div>}
+      {activeView==='Best practices'&&<div className="cloud-practices-view"><div className="workbench-panel-heading"><div><Pill>{provider} BEST PRACTICES</Pill><h3>Design for secure operations.</h3><p>Use these as review prompts; tailor controls to your risk and workload.</p></div></div><div className="cloud-practice-grid">{practices[provider].map(([title,text],index)=><article key={title}><span>{String(index+1).padStart(2,'0')}</span><div><b>{title}</b><p>{text}</p></div></article>)}</div></div>}
+    </Card>
+  </div>;
 }
 
 function Security() {
   const [active,setActive]=useState(0);
   const [filter,setFilter]=useState('All');
+  const [activeView,setActiveView]=useState('Control Plane');
+  const views=['Control Plane','Technology Matrix','Provider Evaluation','Capability-by-capability','Open Source Tech Stack'];
   const groups=['All','Input / output','Cloud platform','Identity & action','Data & privacy','Model & network','Validation & compliance'];
   const grouped=securityControls.map((control,id)=>({...control,id})).filter(control=>filter==='All'||control.group===filter);
   const activeId=grouped.some(control=>control.id===active)?active:grouped[0]?.id;
@@ -474,10 +671,14 @@ function Security() {
     }
   };
   return <div className="security-layout"><div className="security-intro"><div className="security-shield"><Shield size={27}/><div className="shield-ring"/></div><Pill>DEFENSE IN DEPTH</Pill><h3>Guard every transition.<br/><em>Authorize every action.</em></h3><p>Layer application controls with cloud and network protections. No single guardrail makes an agent safe.</p><div className="security-stack">{['Input / output safeguards','Cloud & workload identity','Data and tenant isolation','Model & network integrity','Validation, audit & response'].map((label,index)=><div key={label}><span>{String(index+1).padStart(2,'0')}</span>{label}<Check size={13}/></div>)}</div></div>
-    <Card className="control-explorer"><div className="card-title-row"><div><Pill>THREAT → SECURITY CONTROL → TECHNOLOGY → EVIDENCE</Pill><h3>Interactive security control matrix</h3></div><div className="toggle-group compact">{groups.map(group=><button type="button" key={group} onClick={()=>setFilter(group)} className={filter===group?'active':''}>{group}</button>)}</div></div>
-      <div className="security-matrix-scroll"><table className="security-matrix" aria-label="Threat, security control, technology, and validation evidence"><thead><tr><th scope="col">Threat</th><th scope="col">Security control</th><th scope="col">Technology</th><th scope="col">Validation evidence</th></tr></thead><tbody>{grouped.map(control=><tr key={control.id} tabIndex={0} aria-selected={activeId===control.id} className={activeId===control.id?'active':''} onClick={()=>setActive(control.id)} onKeyDown={event=>selectRowOnKey(event,control.id)}><th scope="row">{control.threat}</th><td>{control.securityControl}</td><td>{control.technology}</td><td>{control.validationEvidence}</td></tr>)}</tbody></table></div>
-      <p className="security-matrix-hint" aria-live="polite">{grouped.length} threat patterns shown · Select or focus a row to highlight the complete control path.</p>
-      <div className="vendor-note"><b>Platform note:</b> Vendor examples are illustrative; verify current capabilities, scope, and licensing. Microsegmentation complements—but does not replace—application-level guardrails and authorization.</div>
+    <Card className="security-workbench"><div className="security-view-tabs" role="tablist" aria-label="Security views">{views.map(view=><button type="button" role="tab" aria-selected={activeView===view} className={activeView===view?'active':''} id={`security-view-${view.toLowerCase().replaceAll(/[^a-z0-9]+/g,'-')}`} aria-controls="security-view-panel" key={view} onClick={()=>setActiveView(view)}>{view}</button>)}</div>
+      <div className="security-view-panel" role="tabpanel" id="security-view-panel" aria-labelledby={`security-view-${activeView.toLowerCase().replaceAll(/[^a-z0-9]+/g,'-')}`}>
+        {activeView==='Control Plane'&&<><div className="security-panel-heading"><Pill>THREAT → SECURITY CONTROL → TECHNOLOGY → EVIDENCE</Pill><h3>Interactive security control matrix</h3></div><div className="security-filter-tabs" role="tablist" aria-label="Filter security controls">{groups.map(group=><button type="button" role="tab" aria-selected={filter===group} key={group} onClick={()=>setFilter(group)}>{group}</button>)}</div><div className="security-matrix-scroll"><table className="security-matrix" aria-label="Threat, security control, technology, and validation evidence"><thead><tr><th scope="col">Threat</th><th scope="col">Security control</th><th scope="col">Technology</th><th scope="col">Validation evidence</th></tr></thead><tbody>{grouped.map(control=><tr key={control.id} tabIndex={0} aria-selected={activeId===control.id} className={activeId===control.id?'active':''} onClick={()=>setActive(control.id)} onKeyDown={event=>selectRowOnKey(event,control.id)}><th scope="row">{control.threat}</th><td>{control.securityControl}</td><td>{control.technology}</td><td>{control.validationEvidence}</td></tr>)}</tbody></table></div><p className="security-matrix-hint" aria-live="polite">{grouped.length} threat patterns shown · Select or focus a row to highlight the complete control path.</p><div className="vendor-note"><b>Platform note:</b> Vendor examples are illustrative; verify current capabilities, scope, and licensing. Microsegmentation complements—but does not replace—application-level guardrails and authorization.</div></>}
+        {activeView==='Technology Matrix'&&<><div className="security-panel-heading"><Pill>CONTROL COVERAGE</Pill><h3>Map threats to controls and evidence.</h3><p>Use the matrix to identify accountable controls and the evidence required to validate them.</p></div><div className="security-matrix-scroll"><table className="security-matrix technology-matrix"><thead><tr><th>Control domain</th><th>Threat pattern</th><th>Security control</th><th>Technology</th></tr></thead><tbody>{securityControls.map(control=><tr key={control.threat}><th>{control.group}</th><td>{control.threat}</td><td>{control.securityControl}</td><td>{control.technology}</td></tr>)}</tbody></table></div></>}
+        {activeView==='Provider Evaluation'&&<><div className="security-panel-heading"><Pill>HYPERSCALER SECURITY</Pill><h3>Evaluate provider control coverage.</h3><p>Illustrative service mapping; verify product scope, configuration, regional availability, and licensing.</p></div><div className="security-matrix-scroll"><table className="security-matrix provider-evaluation-table"><thead><tr><th>Capability</th><th>AWS</th><th>Azure</th><th>Google Cloud</th></tr></thead><tbody>{securityProviderEvaluation.map(row=><tr key={row.capability}><th>{row.capability}</th><td>{row.AWS}</td><td>{row.Azure}</td><td>{row.GCP}</td></tr>)}</tbody></table></div></>}
+        {activeView==='Capability-by-capability'&&<><div className="security-panel-heading"><Pill>DEFENSE IN DEPTH</Pill><h3>Validate each security capability.</h3><p>Pair every control with evidence that can be reviewed and repeated.</p></div><div className="security-capability-grid">{securityCapabilities.map((capability,index)=><article key={capability.name}><span>{String(index+1).padStart(2,'0')}</span><div><b>{capability.name}</b><p>{capability.control}</p><small><Check size={12}/>{capability.evidence}</small></div></article>)}</div></>}
+        {activeView==='Open Source Tech Stack'&&<><div className="security-panel-heading"><Pill>OPEN SOURCE OPTIONS</Pill><h3>Build a composable security stack.</h3><p>Examples only; assess maturity, maintenance, integration, and operational ownership before adoption.</p></div><div className="security-matrix-scroll"><table className="security-matrix open-source-table"><thead><tr><th>Security area</th><th>Illustrative projects</th><th>Where they can help</th></tr></thead><tbody>{openSourceSecurityTools.map(tool=><tr key={tool.area}><th>{tool.area}</th><td>{tool.examples}</td><td>{tool.use}</td></tr>)}</tbody></table></div><div className="vendor-note"><b>Selection note:</b> Open-source tools do not replace threat modeling, configuration review, human approval, or provider-native controls.</div></>}
+      </div>
     </Card>
   </div>;
 }

@@ -1,6 +1,6 @@
 export const slides = [
   { eyebrow: 'ENTERPRISE TRANSFORMATION', title: 'Enterprise Agentic AI', subtitle: 'A practical strategy to move from isolated pilots to trusted, measurable, intelligent workflows.', icon: 'Sparkles', tag: 'STRATEGY FRAMEWORK' },
-  { eyebrow: '01 / DISCOVER', title: 'Start with the business, not the bot', subtitle: 'Find high-friction work where better decisions, faster execution and trusted data can change outcomes.', icon: 'Compass', tag: 'DISCOVERY' },
+  { eyebrow: '01 / DISCOVER', title: 'Start with the business, not the bot', subtitle: 'Pick a customer scenario. The Final Opportunity is scored by the Decision Fit Index: a transparent, rule-based score driven by four decision capabilities and a 16-point evidence checklist.', icon: 'Compass', tag: 'DISCOVERY' },
   { eyebrow: '02 / DECIDE', title: 'Should this process use an agent?', subtitle: 'Choose the least complex pattern that safely delivers the outcome. Autonomy is a design choice—not the goal.', icon: 'GitBranch', tag: 'DECISION FRAMEWORK' },
   { eyebrow: '03 / ARCHITECT', title: 'A reference architecture built for trust', subtitle: 'Connect experience, orchestration, models and enterprise systems—with security and observability throughout.', icon: 'Network', tag: 'REFERENCE ARCHITECTURE' },
   { eyebrow: '04 / SELECT', title: 'Choose frameworks by fit', subtitle: 'Match orchestration style, ecosystem and operating constraints to the workflow you need to run.', icon: 'Layers3', tag: 'FRAMEWORKS' },
@@ -48,6 +48,81 @@ export const cloudServices = {
   Azure: ['Front Door / WAF', 'API Management', 'VNet · private endpoints', 'Application Gateway', 'AKS / Container Apps', 'Azure OpenAI / AI Foundry', 'Blob · Azure SQL', 'AI Search / PostgreSQL', 'Service Bus · Event Hubs', 'Entra ID · Key Vault', 'Azure Monitor · App Insights'],
   GCP: ['Cloud DNS / Armor', 'API Gateway', 'VPC · private service access', 'Cloud Load Balancing', 'GKE / Cloud Run', 'Vertex AI', 'Cloud Storage · AlloyDB', 'Vertex AI Search / Vector Search', 'Pub/Sub', 'IAM · Cloud KMS · Secret Manager', 'Cloud Logging · Trace']
 };
+
+export const cloudArchitectureProviders = {
+  AWS: {
+    layers: [
+      { name: 'Experience and access', detail: 'Web, mobile, APIs', services: ['React / Angular', 'CloudFront', 'Route 53', 'AWS WAF'] },
+      { name: 'API and traffic management', detail: 'Secure entry', services: ['API Gateway', 'Application Load Balancer', 'AppSync (GraphQL)', 'AWS Shield'] },
+      { name: 'Application and compute', detail: 'Microservices', services: ['ECS Fargate', 'EKS Kubernetes', 'Lambda', 'Spring Boot / FastAPI'] },
+      { name: 'Data and storage', detail: 'Persistent data', services: ['Aurora PostgreSQL', 'DynamoDB', 'ElastiCache', 'S3'] },
+      { name: 'Integration and messaging', detail: 'Event driven', services: ['MSK (Kafka)', 'SQS', 'SNS', 'EventBridge'] }
+    ],
+    security: 'Cognito · IAM · KMS · Secrets Manager · CloudWatch · X-Ray',
+    model: 'Amazon Bedrock',
+    modelDetail: 'Managed foundation model service',
+    purpose: 'Build generative AI applications using hosted foundation models.',
+    integrations: ['FastAPI / Spring Boot', 'LangChain / LangGraph', 'Knowledge Bases / RAG', 'S3 document storage'],
+    considerations: ['Model selection and latency', 'Token usage and cost management', 'IAM permissions and data protection', 'Fallback models and retry strategies'],
+    alternatives: ['Amazon SageMaker', 'Amazon Nova', 'Partner models']
+  },
+  Azure: {
+    layers: [
+      { name: 'Experience and access', detail: 'Web, mobile, APIs', services: ['React / Angular', 'Azure Front Door', 'Azure DNS', 'Web Application Firewall'] },
+      { name: 'API and traffic management', detail: 'Secure entry', services: ['API Management', 'Application Gateway', 'Azure Load Balancer', 'DDoS Protection'] },
+      { name: 'Application and compute', detail: 'Microservices', services: ['Azure Kubernetes Service', 'Container Apps', 'Azure Functions', 'Spring Boot / FastAPI'] },
+      { name: 'Data and storage', detail: 'Persistent data', services: ['Azure Database for PostgreSQL', 'Cosmos DB', 'Azure Managed Redis', 'Blob Storage'] },
+      { name: 'Integration and messaging', detail: 'Event driven', services: ['Event Hubs', 'Service Bus', 'Event Grid', 'Logic Apps'] }
+    ],
+    security: 'Entra ID · Key Vault · Defender for Cloud · Azure Monitor · App Insights',
+    model: 'Azure AI Foundry',
+    modelDetail: 'Managed AI model and application platform',
+    purpose: 'Build, evaluate, and govern generative AI applications with managed models.',
+    integrations: ['FastAPI / Spring Boot', 'Semantic Kernel / LangChain', 'Azure AI Search / RAG', 'Blob Storage'],
+    considerations: ['Model availability by region', 'Token usage and cost management', 'Managed identity and data protection', 'Content safety and fallback behavior'],
+    alternatives: ['Azure OpenAI models', 'Azure Machine Learning', 'Partner models']
+  },
+  GCP: {
+    layers: [
+      { name: 'Experience and access', detail: 'Web, mobile, APIs', services: ['React / Angular', 'Cloud CDN', 'Cloud DNS', 'Cloud Armor'] },
+      { name: 'API and traffic management', detail: 'Secure entry', services: ['API Gateway', 'Cloud Load Balancing', 'Apigee', 'Cloud Armor'] },
+      { name: 'Application and compute', detail: 'Microservices', services: ['Google Kubernetes Engine', 'Cloud Run', 'Cloud Functions', 'Spring Boot / FastAPI'] },
+      { name: 'Data and storage', detail: 'Persistent data', services: ['AlloyDB', 'Firestore', 'Memorystore', 'Cloud Storage'] },
+      { name: 'Integration and messaging', detail: 'Event driven', services: ['Pub/Sub', 'Eventarc', 'Dataflow', 'Workflows'] }
+    ],
+    security: 'Cloud IAM · Cloud KMS · Secret Manager · Security Command Center · Cloud Logging · Trace',
+    model: 'Vertex AI',
+    modelDetail: 'Managed AI development and model platform',
+    purpose: 'Develop and operate generative AI applications with managed models and tools.',
+    integrations: ['FastAPI / Spring Boot', 'Vertex AI SDK / LangChain', 'Vertex AI Search / RAG', 'Cloud Storage'],
+    considerations: ['Model availability by region', 'Token usage and cost management', 'Workload identity and data protection', 'Evaluation and fallback behavior'],
+    alternatives: ['Gemini models', 'Vertex AI Model Garden', 'Partner models']
+  }
+};
+
+export const securityProviderEvaluation = [
+  { capability: 'Identity and workload access', AWS: 'IAM · Cognito', Azure: 'Entra ID · Managed Identities', GCP: 'Cloud IAM · Workload Identity' },
+  { capability: 'Secrets and key management', AWS: 'KMS · Secrets Manager', Azure: 'Key Vault · Managed HSM', GCP: 'Cloud KMS · Secret Manager' },
+  { capability: 'Network protection', AWS: 'VPC · WAF · Shield', Azure: 'VNet · WAF · DDoS Protection', GCP: 'VPC · Cloud Armor · Cloud Firewall' },
+  { capability: 'Threat detection and audit', AWS: 'GuardDuty · CloudTrail · Security Hub', Azure: 'Defender for Cloud · Activity Log', GCP: 'Security Command Center · Cloud Audit Logs' },
+  { capability: 'Managed AI safeguards', AWS: 'Bedrock Guardrails', Azure: 'Azure AI Content Safety', GCP: 'Vertex AI safety filters' }
+];
+
+export const securityCapabilities = [
+  { name: 'Input / output safeguards', control: 'Validate requests and responses; detect injection, unsafe content, and sensitive data.', evidence: 'Adversarial prompt tests · redaction checks · blocked-action traces' },
+  { name: 'Identity and action control', control: 'Use unique workload identity, least privilege, tool allowlists, and approval gates.', evidence: 'Access reviews · denied-action tests · approval records' },
+  { name: 'Data and tenant isolation', control: 'Enforce source permissions, tenant boundaries, retention, and deletion policies.', evidence: 'Cross-tenant tests · ACL checks · deletion evidence' },
+  { name: 'Model and network integrity', control: 'Protect private endpoints and artifacts; validate provenance and contain workloads.', evidence: 'Signature checks · segmentation tests · model evaluation results' },
+  { name: 'Validation and response', control: 'Continuously test controls, maintain audit trails, and rehearse incident response.', evidence: 'Control mapping · red-team reports · incident tabletop actions' }
+];
+
+export const openSourceSecurityTools = [
+  { area: 'Guardrails and policy', examples: 'NeMo Guardrails · Guardrails AI · Open Policy Agent', use: 'Response checks, policy decisions, and tool authorization boundaries.' },
+  { area: 'AI security testing', examples: 'Garak · Microsoft PyRIT · promptfoo', use: 'Authorized robustness, prompt-injection, and safety evaluations.' },
+  { area: 'Identity and secrets', examples: 'HashiCorp Vault · External Secrets Operator · Keycloak', use: 'Credential brokering, secret delivery, and identity integration.' },
+  { area: 'Telemetry and audit', examples: 'OpenTelemetry · Langfuse · OpenSearch', use: 'Trace model and tool activity with access-aware retention and redaction.' },
+  { area: 'Supply-chain security', examples: 'Sigstore Cosign · Trivy · Syft', use: 'Artifact signing, vulnerability scanning, and software-bill-of-materials generation.' }
+];
 
 export const securityControls = [
   {

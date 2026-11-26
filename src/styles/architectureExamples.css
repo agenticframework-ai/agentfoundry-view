@@ -1,0 +1,178 @@
+.architecture-stage {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.architecture-use-cases {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 11px;
+  border-top: 1px solid var(--line);
+}
+
+.architecture-use-cases-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.architecture-use-cases-heading h3 {
+  margin: 8px 0 0;
+  color: var(--text);
+  font: 650 16px/1.35 Manrope, sans-serif;
+}
+
+.architecture-use-cases-heading p {
+  max-width: 360px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.5;
+}
+
+.architecture-use-case-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 9px;
+}
+
+.architecture-use-case-card {
+  min-width: 0;
+  min-height: 78px;
+  display: grid;
+  grid-template-columns: 35px minmax(0, 1fr) 14px;
+  align-items: center;
+  gap: 9px;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color .16s ease, background-color .16s ease, transform .16s ease;
+}
+
+.architecture-use-case-card:hover {
+  border-color: var(--cyan);
+  background: var(--panel2);
+  transform: translateY(-1px);
+}
+
+.architecture-use-case-icon {
+  width: 35px;
+  height: 35px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--line2);
+  border-radius: 9px;
+  background: var(--panel2);
+  color: var(--cyan);
+}
+
+.architecture-use-case-copy {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.architecture-use-case-copy b {
+  font: 600 10px/1.35 Manrope, sans-serif;
+}
+
+.architecture-use-case-copy small {
+  color: var(--muted);
+  font-size: 9px;
+  line-height: 1.35;
+}
+
+.architecture-use-case-card > svg {
+  color: var(--muted);
+}
+
+.architecture-preview-backdrop {
+  position: fixed;
+  z-index: 1000;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+  background: rgba(3, 9, 17, .82);
+  backdrop-filter: blur(8px);
+}
+
+.architecture-preview-dialog {
+  width: min(1120px, 100%);
+  max-height: calc(100dvh - 40px);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow: auto;
+  padding: 14px;
+  border: 1px solid rgba(112, 153, 191, .3);
+  border-radius: 13px;
+  background: #0b1725;
+  box-shadow: 0 24px 90px rgba(0, 0, 0, .55);
+}
+
+.architecture-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.architecture-preview-header h2 {
+  margin: 5px 0 0;
+  color: #eef5ff;
+  font: 650 17px/1.35 Manrope, sans-serif;
+}
+
+.architecture-preview-image {
+  width: 100%;
+  max-height: calc(100dvh - 112px);
+  display: block;
+  border-radius: 7px;
+  background: #fff;
+  object-fit: contain;
+}
+
+.architecture-preview-error {
+  margin: 12px 4px;
+  color: #ffb7a4;
+  font-size: 12px;
+}
+
+@media (max-width: 900px) {
+  .architecture-use-case-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 650px) {
+  .architecture-use-cases-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .architecture-use-case-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .architecture-preview-backdrop {
+    padding: 10px;
+  }
+
+  .architecture-preview-dialog {
+    max-height: calc(100dvh - 20px);
+    padding: 10px;
+  }
+
+  .architecture-preview-image {
+    max-height: calc(100dvh - 94px);
+  }
+}

@@ -221,6 +221,14 @@
   scroll-margin-top: 12px;
 }
 
+.decision-dimensions-card > p {
+  color: var(--muted);
+}
+
+.decision-dimensions-table {
+  min-width: 680px;
+}
+
 .decision-guidance-card > p {
   color: var(--muted);
 }

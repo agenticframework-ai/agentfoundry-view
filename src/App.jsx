@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight, Command, Leaf, Maximize, Menu, Minimize, Moon, Play, Presentation, Scale, Search, Square, ThumbsDown, ThumbsUp, Sun, Trees, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Command, Leaf, List, Maximize, Menu, Minimize, Moon, Play, Presentation, Scale, Search, Square, ThumbsDown, ThumbsUp, Sun, Trees, X } from 'lucide-react';
 import { slides } from './data/strategy.js';
 import { searchStrategy } from './data/search.js';
 import SlideContent from './components/SlideContent.jsx';
@@ -262,7 +262,7 @@ export default function App() {
   const slide = slides[active];
   const playbackRunning=isDiscoveryDemoPlaying||isPresentationPlaying;
   const playbackStatus=active<=1
-    ?isDiscoveryDemoPlaying?'Running positive + negative tests · staying on Discovery':isPresentationPlaying?'Auto-playing · 8 sec / section':'Play to preview Discovery examples'
+    ?isDiscoveryDemoPlaying?'Guided Discovery walkthrough · staying on Discovery':isPresentationPlaying?'Auto-playing · 8 sec / section':'Play to preview Discovery examples'
     :isPresentationPlaying
       ?walkthroughProgress?`Section ${String(walkthroughProgress.section).padStart(2,'0')} · Field ${walkthroughProgress.index}/${walkthroughProgress.total}: ${walkthroughProgress.label}`:'Preparing guided walkthrough'
       :active===slides.length-1?'Play to build the executive summary':'Play to guide every field · Discovery → Executive';
@@ -281,7 +281,7 @@ export default function App() {
     <section className="slide-stage" aria-live="polite">
       <AnimatePresence mode="wait">
         <motion.article className="slide-article" key={active} data-slide-index={active} initial={{opacity:0,y:14}} animate={{opacity:1,y:0}} exit={{opacity:0,y:-10}} transition={{duration:.32,ease:'easeOut'}}>
-          <div className={`slide-title-row ${active===2?'decision-title-row':''}`}><div><div className="section-tag"><span>{iconMap[slide.icon]||'✦'}</span>{slide.tag}</div><h1>{slide.title}</h1>{slide.subtitle&&<p className="slide-subtitle">{slide.subtitle}</p>}</div>{active===2?<nav className="decision-section-nav" aria-label="Decision guidance"><a href="#decision-pros-cons"><Scale size={15}/><span>Pros &amp; cons</span></a><a href="#decision-recommend"><ThumbsUp size={15}/><span>Recommend</span></a><a href="#decision-not-recommend"><ThumbsDown size={15}/><span>Not recommend</span></a></nav>:active===0?null:<div className="slide-number-watermark">{String(active).padStart(2,'0')}</div>}</div>
+          <div className={`slide-title-row ${active===2?'decision-title-row':''}`}><div><div className="section-tag"><span>{iconMap[slide.icon]||'✦'}</span>{slide.tag}</div><h1>{slide.title}</h1>{slide.subtitle&&<p className="slide-subtitle">{slide.subtitle}</p>}</div>{active===2?<nav className="decision-section-nav" aria-label="Decision guidance"><a href="#decision-dimensions"><List size={15}/><span>Dimensions</span></a><a href="#decision-pros-cons"><Scale size={15}/><span>Pros &amp; cons</span></a><a href="#decision-recommend"><ThumbsUp size={15}/><span>Recommend</span></a><a href="#decision-not-recommend"><ThumbsDown size={15}/><span>Not recommend</span></a></nav>:active<=1?null:<div className="slide-number-watermark">{String(active).padStart(2,'0')}</div>}</div>
           <div className="slide-content"><SlideContent slide={active} demoRunToken={discoveryDemoRunToken} demoStopToken={discoveryDemoStopToken} onDiscoveryDemoComplete={onDiscoveryDemoComplete} onNavigate={navigate}/></div>
         </motion.article>
       </AnimatePresence>
